@@ -1,0 +1,68 @@
+﻿@model IEnumerable<TrgovinaMVC.Models.kupac>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <input type="button" value="Kreiraj novog kupca" class="btn btn-primary mb-3" onclick="location.href='@Url.Action("Create")'" />
+</div>
+
+<h2>Lista kupaca</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">PIB</th>
+            <th scope="col">Naziv</th>
+            <th scope="col">Adresa</th>
+            <th scope="col">Broj telefona</th>
+            <th scope="col" />
+            <th scope="col" />
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            if (item.db_hidden == false)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.pib)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.naziv)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.adresa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.brtel)
+                    </td>
+                    <td>
+                        <input type="button" value="Izmeni" class="btn btn-primary btn-sm" onclick="location.href='@Url.Action("Edit", new { id = item.pib })'">
+                    </td>
+                    <td>
+                        <input type="button" value="Obriši" class="btn btn-primary btn-sm" onclick="Submit('@item.pib', this)">
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    function Submit(id, element) {
+        if (confirm("Da li ste sigurni da želite da obrišete ovog kupca?")) {
+            $.ajax({
+                url: '@Url.Action("Delete")',
+                type: "POST",
+                data: { idKupac: id },
+                complete: function () {
+                    $(element).parents("tr").hide(250);
+                }
+            });
+        } else {
+            return false;
+        }
+    }
+</script>

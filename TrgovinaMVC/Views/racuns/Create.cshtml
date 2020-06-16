@@ -1,0 +1,185 @@
+﻿@model TrgovinaMVC.Models.racun
+
+@{
+    ViewBag.Title = "Kreiraj novi račun";
+}
+
+<div class="row mb-3">
+    <h2>Kreiraj novi račun</h2>
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form" }))
+{
+    <div class="row mb-3">
+        <div id="frmRacun">
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-inline">
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.tipracuna, "Tip računa:", htmlAttributes: new { @class = "control-label mr-3" })
+                    <div>
+                        @Html.DropDownListFor(model => model.tipracuna,
+                                 new SelectList(new List<SelectListItem>
+                                 {
+                                                    new SelectListItem { Value = "Gotovinski", Text = "Gotovinski"},
+                                                    new SelectListItem { Value = "Virman", Text = "Virman"},
+                                 }, "Value", "Text"), null, new { @class = "form-control mr-3", @onchange = "Visible(this.value)" })
+                        @Html.ValidationMessageFor(model => model.tipracuna, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.pib, "Kupac:", htmlAttributes: new { @class = "control-label mr-3" })
+                    <div>
+                        @Html.EditorFor(model => model.pib, new { htmlAttributes = new { @class = "form-control mr-3" } })
+                    </div>
+                </div>
+                <div class="form-group" id="id-date" style="display:none">
+                    @Html.LabelFor(model => model.datvalute, "Datum valute:", htmlAttributes: new { @class = "control-label mr-3" })
+                    <div>
+                        @Html.EditorFor(model => model.datvalute, new { htmlAttributes = new { @class = "form-control mr-3", @data_provide = "datepicker", @data_date_format = "dd.mm.yyyy.", @autocomplete = "off" } })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row mb-1" id="tabela">
+
+        @*@Html.Action("Create","stavkaracunas")*@
+        <table class="table table-hover" @*style="width: 1000px"*@>
+            <thead>
+                <tr>
+                    <th scope="col">Artikal</th>
+                    <th scope="col">Cena po JM</th>
+                    <th scope="col">Količina</th>
+                    <th scope="col" />
+                </tr>
+            </thead>
+            <tbody id="stavke">
+                @Html.EditorFor(model => model.stavkaracunas)
+            </tbody>
+        </table>
+        
+    </div>
+
+    @*<div class="row mb-1" id="tabela">
+            @Html.Action("Index", "stavkaracunas")
+        </div>*@
+
+    <div class="row">
+        <input type="button" id="btnStart" value="Dodaj stavku" class="btn btn-primary btn-sm mb-3" onclick="AddStavka()" />
+    </div>
+
+    <div class="row">
+        <input type="submit" id="btnSbmt" value="Gotovo" class="btn btn-primary btn-sm mb-3" />
+    </div>
+}
+
+@Html.ActionLink("Nazad", "Index")
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+        $("document").ready(function () {
+            $('#kupac_naziv').autocomplete({
+                source: '/racuns/getNaziviKupaca',
+                classes:
+                {
+                    "ui-autocomplete": "btn-light"
+                }
+            })
+            $("#artikal_naziv").PrepareAutocomplete()
+            AddStavka()
+        })
+
+        @*jQuery.fn.extend({
+            PrepareAutocomplete: function () {
+                var input = $(this)
+                input.autocomplete({
+                    source: '/../stavkaracunas/getNaziviArtikla',
+                    classes:
+                    {
+                        "ui-autocomplete": "btn-light"
+                    },
+                    select: function (event, ui) {
+                        $.ajax({
+                            url: '@Url.Action("getCenaFromArtikal", "stavkaracunas")',
+                            type: 'GET',
+                            data: { term: ui.item.value },
+                            success: function (result) {
+                                console.log(input)
+                                input.parents("tr").find("input[data-orgname='cenapojm']").val(result)
+                                //alert("complete!")
+                            }
+                        })
+                    }
+                })
+            }
+        });*@
+
+
+    function Visible(val) {
+        if (val == "Virman")
+            $("#id-date").fadeIn(250);
+        else $("#id-date").fadeOut(250);
+        }
+
+
+
+        function AddStavka()
+        {
+            $.ajax({
+                data: $("#form").serialize(),
+                type: 'POST',
+                url: '@Url.Action("addStavka")',
+                success: function (partialView) {
+                    $("#stavke").html(partialView)
+                        $('form').removeData('validator');
+                        $('form').removeData('unobtrusiveValidation');
+                        $.validator.unobtrusive.parse('form');
+                }
+            })
+        }
+
+        function DeleteStavka(element) {
+            $(element).closest("tr").fadeOut(250, function () {
+                $(this).remove()
+                resetIndex()
+            })
+        }
+
+        function resetIndex() {
+            $("tbody").children("tr").each(function (index) {
+                console.log(index)
+
+                var inputs = $(this).find("input[type='text']")
+                console.log(inputs)
+                $.each(inputs, function () {
+                    
+                    var name = $(this).attr("name")
+                    console.log(name)
+                    var leftIndex = name.indexOf('[') + 1
+                    var rightIndex = name.indexOf(']')
+                    var number = name.substring(leftIndex, rightIndex)
+                    name = name.replace(number, index)
+                    $(this).attr("name", name)
+                })
+
+                var spans = $(this).find("span")
+
+                $.each(spans, function () {
+                    var name = $(this).attr("data-valmsg-for")
+                    var leftIndex = name.indexOf('[') + 1
+                    var rightIndex = name.indexOf(']')
+                    var number = name.substring(leftIndex, rightIndex)
+                    name = name.replace(number, index)
+                    $(this).attr("data-valmsg-for", name)
+                })
+        })
+        }
+    </script>
+}

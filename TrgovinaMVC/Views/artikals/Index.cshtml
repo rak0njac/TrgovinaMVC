@@ -1,0 +1,68 @@
+﻿@model IEnumerable<TrgovinaMVC.Models.artikal>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+    <div class="row">
+        <input type="button" value="Kreiraj novi artikal" class="btn btn-primary mb-3" onclick="location.href='@Url.Action("Create")'" />
+    </div>
+
+<h2>Lista artikala</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Naziv</th>
+            <th scope="col">Cena</th>
+            <th scope="col">Jedinica mere</th>
+            <th scope="col">Količina na stanju</th>
+            <th scope="col" />
+            <th scope="col" />
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            if (item.db_hidden == false)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.naziv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cena)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.jm)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.kolnastanju)
+                </td>
+                <td>
+                    <input type="button" value="Izmeni" class="btn btn-primary btn-sm" onclick="location.href='@Url.Action("Edit", new { id = item.idartikal })'">
+                </td>
+                <td>
+                    <input type="button" value="Obriši" class="btn btn-primary btn-sm" onclick="Submit(@item.idartikal, this)">
+                </td>
+            </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    function Submit(id, element) {
+        if (confirm("Da li ste sigurni da želite da obrišete ovaj artikal?")) {
+            $.ajax({
+                url: '@Url.Action("Delete")',
+                type: "POST",
+                data: { idArt: id },
+                complete: function () {
+                    $(element).parents("tr").hide(250);
+                }
+            });
+        } else {
+            return false;
+        }
+    }
+</script>

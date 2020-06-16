@@ -1,0 +1,47 @@
+﻿@model IEnumerable<TrgovinaMVC.Models.racun>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row justify-content-between mb-3">
+    <input type="button" value="Kreiraj novi račun" class="btn btn-primary" onclick="location.href='@Url.Action("Create")'" />
+    <select class="selectpicker" id="selektor" data-style="btn-primary" onchange="TypeChange(this)">
+        <option>Gotovinski</option>
+        <option>Virman</option>
+    </select>
+</div>
+<h2>Lista računa</h2>
+
+<div id="tabela">
+    @Html.Partial("_racuni")
+</div>
+
+@section scripts{
+    <script>
+    function Submit(id, element) {
+        if (confirm("Da li ste sigurni da želite da obrišete ovaj račun?")) {
+            $.ajax({
+                url: '@Url.Action("Delete")',
+                type: "POST",
+                data: { idRacun : id },
+                complete: function () {
+                    $(element).parents("tr").hide(250);
+                }
+            });
+        }
+        else {
+             return false;
+        }
+        }
+    </script>
+    <script>
+        function TypeChange(element) {
+            var val = $(element).val();
+            $("#tabela").fadeOut(250, function () {
+                $(this).load("/racuns/Reload/" + val);
+                $(this).fadeIn(250);
+             })
+       }
+    </script>
+}

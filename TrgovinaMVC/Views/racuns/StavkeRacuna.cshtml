@@ -1,2 +1,39 @@
-﻿@model TrgovinaMVC.Models.racun
-@Html.EditorFor(model => model.stavkaracunas)
+﻿@*@Html.EditorFor(model => model.stavkaracunas)*@
+@model TrgovinaMVC.Models.stavkaracuna
+<tr>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <td>
+        <div>
+            <div>
+                @*<input type="hidden" name="artikal.naziv.Index" value="" />*@
+                @Html.EditorFor(model => model.artikal.naziv, new { htmlAttributes = new { @class = "form-control", @data_orgname = "artikal.naziv" } })
+                @Html.ValidationMessageFor(model => model.artikal.naziv, "", new { @class = "text-danger", @data_orgname = "artikal.naziv" })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div>
+            <div>
+                @*<input type="hidden" name="stavke.cenapojm.Index" />*@
+                @Html.EditorFor(model => model.cenapojm, new { htmlAttributes = new { @class = "form-control", @data_orgname = "cenapojm" } })
+                @Html.ValidationMessageFor(model => model.cenapojm, "", new { @class = "text-danger", @data_orgname = "cenapojm" })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div>
+            <div>
+                @*<input type="hidden" name="kolicina.Index" />*@
+                @Html.EditorFor(model => model.kolicina, new { htmlAttributes = new { @class = "form-control", @data_orgname = "kolicina" } })
+                @Html.ValidationMessageFor(model => model.kolicina, "", new { @class = "text-danger", @data_orgname = "kolicina" })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div>
+            <div>
+                <input type="button" value="Obriši" class="btn btn-primary" onclick="DeleteStavka(this)" @*style="display:none"*@ />
+            </div>
+        </div>
+    </td>
+</tr>

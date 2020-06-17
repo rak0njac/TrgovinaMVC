@@ -34,7 +34,7 @@ namespace TrgovinaMVC.Controllers
         }
 
         // GET: racuns/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Show(int? id)
         {
             if (id == null)
             {
@@ -55,11 +55,24 @@ namespace TrgovinaMVC.Controllers
             return View();
         }
 
+        public ActionResult getNaziviKupaca()
+        {
+            List<string> nazivi = db.kupacs.Select(x => x.naziv).ToList();
+            return Json(nazivi, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult getNaziviArtikla()
+        {
+            List<string> nazivi = db.artikals.Select(x => x.naziv).ToList();
+            return Json(nazivi, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
-        public ActionResult addStavka([Bind(Include = "stavkaracunas")] racun racun)
+        public ActionResult addStavka([Bind] racun racun)
         {
             racun.stavkaracunas.Add(new stavkaracuna());
-            return PartialView("StavkeRacuna", racun);
+            return new EmptyResult();
+            //return PartialView("StavkeRacuna", racun);
         }
 
         // POST: racuns/Create
@@ -73,12 +86,11 @@ namespace TrgovinaMVC.Controllers
             racun.db_hidden = false;
             racun.datizdavanja = DateTime.Now;
             racun.brracuna = 0;
+            racun.kupac = db.kupacs.Where(o => o.naziv == racun.kupac.naziv).FirstOrDefault();
 
             foreach (stavkaracuna sr in racun.stavkaracunas)
             {
                 sr.artikal = db.artikals.Where(o => o.naziv == sr.artikal.naziv).FirstOrDefault();
-                //Debug.WriteLine(sr.artikal.naziv);
-                //Debug.WriteLine(sr.idartikal);
             }
 
             if (ModelState.IsValid)
@@ -86,11 +98,6 @@ namespace TrgovinaMVC.Controllers
                 try
                 {
                     db.racuns.Add(racun);
-                    //foreach (stavkaracuna s in vm.stavke)
-                    //{
-                    //    s.idracun = 1;
-                    //    db.stavkaracunas.Add(s);
-                    //}
                     db.SaveChanges();
                     return RedirectToAction("Index");
 
@@ -101,7 +108,6 @@ namespace TrgovinaMVC.Controllers
                     {
                         foreach (var validationError in errors.ValidationErrors)
                         {
-                            // get the error message 
                             string errorMessage = validationError.ErrorMessage;
                             Debug.WriteLine(errorMessage);
                         }
@@ -113,53 +119,6 @@ namespace TrgovinaMVC.Controllers
             return View(racun);
         }
 
-        // GET: racuns/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            racun racun = db.racuns.Find(id);
-            if (racun == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.pib = new SelectList(db.kupacs, "pib", "naziv", racun.pib);
-            return View(racun);
-        }
-
-        // POST: racuns/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idracun,brracuna,tipracuna,godina,datizdavanja,datvalute,ukupnacena,db_hidden,pib")] racun racun)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(racun).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.pib = new SelectList(db.kupacs, "pib", "naziv", racun.pib);
-            return View(racun);
-        }
-
-        // GET: racuns/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            racun racun = db.racuns.Find(id);
-            if (racun == null)
-            {
-                return HttpNotFound();
-            }
-            return View(racun);
-        }
 
         // POST: racuns/Delete/5
         [HttpPost, ActionName("Delete")]

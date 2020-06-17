@@ -30,15 +30,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.pib, "Kupac:", htmlAttributes: new { @class = "control-label mr-3" })
+                    @Html.LabelFor(model => model.kupac.naziv, "Kupac:", htmlAttributes: new { @class = "control-label mr-3" })
                     <div>
-                        @Html.EditorFor(model => model.pib, new { htmlAttributes = new { @class = "form-control mr-3" } })
+                        @Html.EditorFor(model => model.kupac.naziv, new { htmlAttributes = new { @class = "form-control mr-3" } })
                     </div>
                 </div>
                 <div class="form-group" id="id-date" style="display:none">
                     @Html.LabelFor(model => model.datvalute, "Datum valute:", htmlAttributes: new { @class = "control-label mr-3" })
                     <div>
-                        @Html.EditorFor(model => model.datvalute, new { htmlAttributes = new { @class = "form-control mr-3", @data_provide = "datepicker", @data_date_format = "dd.mm.yyyy.", @autocomplete = "off" } })
+                        @Html.EditorFor(model => model.datvalute, new { htmlAttributes = new { @class = "form-control mr-3", @data_provide = "datepicker", @autocomplete = "off" } })
                     </div>
                 </div>
             </div>
@@ -58,7 +58,8 @@
                 </tr>
             </thead>
             <tbody id="stavke">
-                @Html.EditorFor(model => model.stavkaracunas)
+                @*@Html.EditorFor(model => model.stavkaracunas)*@
+                @Html.Partial("StavkeRacuna")
             </tbody>
         </table>
         
@@ -73,7 +74,7 @@
     </div>
 
     <div class="row">
-        <input type="submit" id="btnSbmt" value="Gotovo" class="btn btn-primary btn-sm mb-3" />
+        <input type="submit" id="btnSbmt" value="Gotovo" class="btn btn-primary btn-lg mb-3" />
     </div>
 }
 
@@ -84,42 +85,54 @@
 
     <script>
 
+        var naziviArtikla
+
         $("document").ready(function () {
-            $('#kupac_naziv').autocomplete({
-                source: '/racuns/getNaziviKupaca',
+            $("#stavke").find("input[type='text']").each(function () {
+                var name = $(this).attr("name")
+                name = "stavkaracunas[0]." + name
+                $(this).attr("name", name)
+            })
+
+            $("#stavke").find("span").each(function () {
+                var name = $(this).attr("data-valmsg-for")
+                name = "stavkaracunas[0]." + name
+                $(this).attr("data-valmsg-for", name)
+            })
+            ResetValidator()
+            $.get("/racuns/getNaziviKupaca", function (data) {
+                $('#kupac_naziv').autocomplete({
+                    source: data,
+                    delay: 0,
                 classes:
                 {
                     "ui-autocomplete": "btn-light"
                 }
+                })
+
+            //jsonKupci = JSON.parse(JSON.stringify(json))
+            //console.log(json)
+
             })
-            $("#artikal_naziv").PrepareAutocomplete()
-            AddStavka()
+            $.get("/racuns/getNaziviArtikla", function (data) {
+                naziviArtikla = data
+                            $('#artikal_naziv').autocomplete({
+                source: naziviArtikla,
+                    delay: 0,
+                classes:
+                {
+                    "ui-autocomplete": "btn-light"
+                }
+                })
+            })
+
         })
 
-        @*jQuery.fn.extend({
-            PrepareAutocomplete: function () {
-                var input = $(this)
-                input.autocomplete({
-                    source: '/../stavkaracunas/getNaziviArtikla',
-                    classes:
-                    {
-                        "ui-autocomplete": "btn-light"
-                    },
-                    select: function (event, ui) {
-                        $.ajax({
-                            url: '@Url.Action("getCenaFromArtikal", "stavkaracunas")',
-                            type: 'GET',
-                            data: { term: ui.item.value },
-                            success: function (result) {
-                                console.log(input)
-                                input.parents("tr").find("input[data-orgname='cenapojm']").val(result)
-                                //alert("complete!")
-                            }
-                        })
-                    }
-                })
-            }
-        });*@
+        function ResetValidator() {
+                        $('form').removeData('validator');
+            $('form').removeData('unobtrusiveValidation');
+            $.validator.unobtrusive.parse('form');
+        }
 
 
     function Visible(val) {
@@ -132,17 +145,22 @@
 
         function AddStavka()
         {
-            $.ajax({
-                data: $("#form").serialize(),
-                type: 'POST',
-                url: '@Url.Action("addStavka")',
-                success: function (partialView) {
-                    $("#stavke").html(partialView)
-                        $('form').removeData('validator');
-                        $('form').removeData('unobtrusiveValidation');
-                        $.validator.unobtrusive.parse('form');
+            var newrow = $("tr").last().clone()
+            newrow.hide()
+            $("#stavke").append(newrow)
+            newrow.show(250)
+            newrow.find("input[type='text']").val("")
+            newrow.find("span[id*='error']").text("")
+            newrow.find("input[name*='artikal']").autocomplete({
+                source: naziviArtikla,
+                    delay: 0,
+                classes:
+                {
+                    "ui-autocomplete": "btn-light"
                 }
-            })
+                })
+            resetIndex()
+            ResetValidator()
         }
 
         function DeleteStavka(element) {

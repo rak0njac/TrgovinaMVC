@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -24,7 +26,7 @@ namespace TrgovinaMVC.Controllers
         // GET: kupacs/Create
         public ActionResult Create()
         {
-            return View();
+            return PartialView("Form");
         }
 
         // POST: kupacs/Create
@@ -34,15 +36,31 @@ namespace TrgovinaMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "pib,naziv,adresa,brtel")] kupac kupac)
         {
+            kupac.db_hidden = false;
             if (ModelState.IsValid)
             {
-                kupac.db_hidden = false;
-                db.kupacs.Add(kupac);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.kupacs.Add(kupac);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    foreach (var errors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in errors.ValidationErrors)
+                        {
+                            string errorMessage = validationError.ErrorMessage;
+                            Debug.WriteLine(errorMessage);
+                        }
+                    }
+                }
             }
 
-            return View(kupac);
+
+            return PartialView("Form", kupac);
         }
 
         // GET: kupacs/Edit/5
@@ -57,7 +75,7 @@ namespace TrgovinaMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(kupac);
+            return PartialView("Form", kupac);
         }
 
         // POST: kupacs/Edit/5
@@ -73,7 +91,7 @@ namespace TrgovinaMVC.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(kupac);
+            return PartialView("Form", kupac);
         }
 
         public ActionResult Delete(string idKupac)
@@ -81,7 +99,7 @@ namespace TrgovinaMVC.Controllers
             kupac kupac = db.kupacs.Find(idKupac);
             kupac.db_hidden = true;
             db.SaveChanges();
-            return View(kupac);
+            return new EmptyResult();
         }
 
 

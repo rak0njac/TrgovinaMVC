@@ -23,7 +23,7 @@ namespace TrgovinaMVC.Controllers
         // GET: artikals/Create
         public ActionResult Create()
         {
-            return View();
+            return PartialView("Form");
         }
 
         // POST: artikals/Create
@@ -31,17 +31,18 @@ namespace TrgovinaMVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idartikal,naziv,cena,jm,kolnastanju")] artikal artikal)
+        public ActionResult Create([Bind(Include = "naziv,cena,jm,kolnastanju")] artikal artikal)
         {
+
+            artikal.db_hidden = false;
             if (ModelState.IsValid)
             {
-                artikal.db_hidden = false;
                 db.artikals.Add(artikal);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(artikal);
+            return PartialView("Form", artikal);
         }
 
         // GET: artikals/Edit/5
@@ -56,7 +57,7 @@ namespace TrgovinaMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(artikal);
+            return PartialView("Form", artikal);
         }
 
         // POST: artikals/Edit/5
@@ -72,28 +73,17 @@ namespace TrgovinaMVC.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(artikal);
+            return PartialView("Form", artikal);
         }
 
         // GET: artikals/Delete/5
-        public ActionResult Delete(int idArt)
+        public ActionResult Delete(int? idArt)
         {
             artikal artikal = db.artikals.Find(idArt);
             artikal.db_hidden = true;
             db.SaveChanges();
             return View(artikal);
         }
-
-        // POST: artikals/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    artikal artikal = db.artikals.Find(id);
-        //    db.artikals.Remove(artikal);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
 
         protected override void Dispose(bool disposing)
         {

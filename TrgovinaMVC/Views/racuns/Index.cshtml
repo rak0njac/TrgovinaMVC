@@ -14,26 +14,31 @@
 <h2>Lista računa</h2>
 
 <div id="tabela">
-    @Html.Partial("_racuni")
+    @Html.Partial("Racuni")
 </div>
 
 @section scripts{
-    <script>
-    function Submit(id, element) {
-        if (confirm("Da li ste sigurni da želite da obrišete ovaj račun?")) {
+
+
+<script type="text/javascript">
+    var idDelete;
+    var elementDelete;
+
+    function prepareDelete(id, element) {
+        idDelete = id
+        elementDelete = element
+    }
+
+    function Submit() {
             $.ajax({
                 url: '@Url.Action("Delete")',
                 type: "POST",
-                data: { idRacun : id },
+                data: { idRacun: idDelete },
                 complete: function () {
-                    $(element).parents("tr").hide(250);
+                    $(elementDelete).parents("tr").hide(250);
                 }
             });
-        }
-        else {
-             return false;
-        }
-        }
+    }
     </script>
     <script>
         function TypeChange(element) {

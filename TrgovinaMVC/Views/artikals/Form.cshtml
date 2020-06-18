@@ -1,24 +1,16 @@
 ﻿@model TrgovinaMVC.Models.artikal
 
-@{
-    ViewBag.Title = "Izmena artikla";
-}
-
-<h2>Izmena artikla</h2>
-
-
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.idartikal)
-        @Html.HiddenFor(model=>model.db_hidden)
+        @Html.HiddenFor(model => model.db_hidden)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.naziv, "Naziv", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.naziv, "Naziv", htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.naziv, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.naziv, "", new { @class = "text-danger" })
@@ -26,7 +18,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.cena, "Cena", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.cena, "Cena", htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.cena, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.cena, "", new { @class = "text-danger" })
@@ -34,7 +26,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.jm, "Jedinica mere", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.jm, "Jedinica mere", htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.jm, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.jm, "", new { @class = "text-danger" })
@@ -42,24 +34,20 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.kolnastanju, "Količina na stanju", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.kolnastanju, "Količina na stanju", htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.kolnastanju, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.kolnastanju, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Sačuvaj" class="btn btn-primary btn-sm" />
-            </div>
-        </div>
     </div>
+    @*<div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Sačuvaj" class="btn btn-primary btn-sm" />
+                </div>
+            </div>
+        </div>*@
 }
-
-<div>
-    @Html.ActionLink("Nazad", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

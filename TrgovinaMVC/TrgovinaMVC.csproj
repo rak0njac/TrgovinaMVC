@@ -593,18 +593,15 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\artikals\Create.cshtml" />
-    <Content Include="Views\artikals\Edit.cshtml" />
+    <Content Include="Views\artikals\Form.cshtml" />
     <Content Include="Views\artikals\Index.cshtml" />
-    <Content Include="Views\kupacs\Create.cshtml" />
-    <Content Include="Views\kupacs\Edit.cshtml" />
+    <Content Include="Views\kupacs\Form.cshtml" />
     <Content Include="Views\kupacs\Index.cshtml" />
     <Content Include="Views\racuns\Create.cshtml" />
-    <Content Include="Views\racuns\Delete.cshtml" />
     <Content Include="Views\racuns\Index.cshtml" />
-    <Content Include="Views\racuns\_racuni.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\stavkaracuna.cshtml" />
+    <Content Include="Views\racuns\Racuni.cshtml" />
     <Content Include="Views\racuns\StavkeRacuna.cshtml" />
+    <Content Include="Views\racuns\Racun.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

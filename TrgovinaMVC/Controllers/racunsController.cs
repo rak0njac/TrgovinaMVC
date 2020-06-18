@@ -30,7 +30,7 @@ namespace TrgovinaMVC.Controllers
                 if (r.tipracuna == id)
                     list.Add(r);
             }
-            return PartialView("_racuni", list);
+            return PartialView("Racuni", list);
         }
 
         // GET: racuns/Details/5
@@ -82,10 +82,10 @@ namespace TrgovinaMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "tipracuna, kupac, datvalute, stavkaracunas")] racun racun)
         {
-            racun.godina = 1234;
+            racun.godina = DateTime.Now.Year;
             racun.db_hidden = false;
             racun.datizdavanja = DateTime.Now;
-            racun.brracuna = 0;
+            racun.brracuna = db.racuns.Where(o => o.tipracuna == racun.tipracuna).OrderBy(o => o.brracuna).Select(o => o.brracuna).FirstOrDefault() + 1;
             racun.kupac = db.kupacs.Where(o => o.naziv == racun.kupac.naziv).FirstOrDefault();
 
             foreach (stavkaracuna sr in racun.stavkaracunas)
@@ -120,15 +120,12 @@ namespace TrgovinaMVC.Controllers
         }
 
 
-        // POST: racuns/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int? idRacun)
         {
-            racun racun = db.racuns.Find(id);
-            db.racuns.Remove(racun);
+            racun racun = db.racuns.Find(idRacun);
+            racun.db_hidden = true;
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return View(racun);
         }
 
         protected override void Dispose(bool disposing)

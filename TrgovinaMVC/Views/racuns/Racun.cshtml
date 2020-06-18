@@ -1,0 +1,90 @@
+﻿@model TrgovinaMVC.Models.racun
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Racun</title>
+</head>
+<body>
+    <div>
+        <h4>racun</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.brracuna)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.brracuna)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.tipracuna)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.tipracuna)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.godina)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.godina)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.datizdavanja)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.datizdavanja)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.datvalute)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.datvalute)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ukupnacena)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ukupnacena)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.db_hidden)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.db_hidden)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.kupac.naziv)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.kupac.naziv)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.idracun }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

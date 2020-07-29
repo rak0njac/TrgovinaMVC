@@ -23,15 +23,15 @@ namespace TrgovinaMVC.Models
         public int idracun { get; set; }
         public int brracuna { get; set; }
         public string tipracuna { get; set; }
-        public Nullable<int> godina { get; set; }
         public System.DateTime datizdavanja { get; set; }
         public Nullable<System.DateTime> datvalute { get; set; }
         public decimal ukupnacena { get; set; }
-        public Nullable<bool> db_hidden { get; set; }
-        public string pib { get; set; }
+        public string nazivkupca { get; set; }
+        public string pibkupca { get; set; }
+        public string adresakupca { get; set; }
+        public string brtelkupca { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<stavkaracuna> stavkaracunas { get; set; }
-        public virtual kupac kupac { get; set; }
     }
 }

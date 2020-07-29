@@ -14,20 +14,10 @@ namespace TrgovinaMVC.Models
     
     public partial class artikal
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public artikal()
-        {
-            this.stavkaracunas = new HashSet<stavkaracuna>();
-        }
-    
         public int idartikal { get; set; }
         public string naziv { get; set; }
         public decimal cena { get; set; }
         public string jm { get; set; }
         public decimal kolnastanju { get; set; }
-        public Nullable<bool> db_hidden { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<stavkaracuna> stavkaracunas { get; set; }
     }
 }

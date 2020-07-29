@@ -19,9 +19,9 @@ namespace TrgovinaMVC.Models
         public decimal cenapojm { get; set; }
         public decimal kolicina { get; set; }
         public decimal ukupnacena { get; set; }
-        public Nullable<int> idartikal { get; set; }
+        public string nazivartikla { get; set; }
+        public string jmartikla { get; set; }
     
         public virtual racun racun { get; set; }
-        public virtual artikal artikal { get; set; }
     }
 }

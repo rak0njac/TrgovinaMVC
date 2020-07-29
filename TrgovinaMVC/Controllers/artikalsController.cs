@@ -35,7 +35,6 @@ namespace TrgovinaMVC.Controllers
         public ActionResult Create([Bind(Include = "naziv,cena,jm,kolnastanju")] artikal artikal)
         {
 
-            artikal.db_hidden = false;
             if (ModelState.IsValid)
             {
                 db.artikals.Add(artikal);
@@ -68,7 +67,7 @@ namespace TrgovinaMVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idartikal,naziv,cena,jm,kolnastanju,db_hidden")] artikal artikal)
+        public ActionResult Edit([Bind(Include = "idartikal,naziv,cena,jm,kolnastanju")] artikal artikal)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +83,6 @@ namespace TrgovinaMVC.Controllers
         public ActionResult Delete(int? idArt)
         {
             artikal artikal = db.artikals.Find(idArt);
-            artikal.db_hidden = true;
             db.SaveChanges();
             return View(artikal);
         }

@@ -36,7 +36,6 @@ namespace TrgovinaMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "pib,naziv,adresa,brtel")] kupac kupac)
         {
-            kupac.db_hidden = false;
             if (ModelState.IsValid)
             {
                 try
@@ -85,7 +84,7 @@ namespace TrgovinaMVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "pib,naziv,adresa,brtel,db_hidden")] kupac kupac)
+        public ActionResult Edit([Bind(Include = "pib,naziv,adresa,brtel")] kupac kupac)
         {
             if (ModelState.IsValid)
             {
@@ -100,7 +99,6 @@ namespace TrgovinaMVC.Controllers
         public ActionResult Delete(string idKupac)
         {
             kupac kupac = db.kupacs.Find(idKupac);
-            kupac.db_hidden = true;
             db.SaveChanges();
             return new EmptyResult();
         }

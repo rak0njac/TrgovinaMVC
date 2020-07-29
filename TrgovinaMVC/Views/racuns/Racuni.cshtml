@@ -5,7 +5,7 @@
         <tr>
             <th scope="col">Broj računa</th>
             <th scope="col">Datum izdavanja</th>
-            @if (Model.First().tipracuna == "Virman")
+            @if (Model.Count() > 0 && Model.First().tipracuna == "Virman")
             {
                 <th scope="col">Datum valute</th>
             }
@@ -18,8 +18,6 @@
     <tbody>
         @foreach (var item in Model)
         {
-            if (item.db_hidden == false)
-            {
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.brracuna)/@Html.DisplayFor(modelItem => item.datizdavanja.Year)
@@ -34,7 +32,7 @@
                         </td>
                     }
                     <td>
-                        @Html.DisplayFor(modelItem => item.kupac.naziv)
+                        @Html.DisplayFor(modelItem => item.nazivkupca)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ukupnacena)
@@ -46,7 +44,6 @@
                         <input type="button" value="Obriši" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalDel" onclick="prepareDelete(@item.idracun, this)">
                     </td>
                 </tr>
-            }
         }
     </tbody>
 </table>

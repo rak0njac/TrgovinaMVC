@@ -30,16 +30,16 @@
             </div>
             <div class="col col-3 text-right">
                 <p>
-                    <b>@Model.kupac.naziv</b><br />
-                    <b>@Model.kupac.adresa</b><br />
-                    <b>@Model.kupac.brtel</b><br />
-                                             <b>@Model.kupac.pib</b>
+                    <b>@Model.nazivkupca</b><br />
+                    <b>@Model.adresakupca</b><br />
+                    <b>@Model.brtelkupca</b><br />
+                                             <b>@Model.pibkupca</b>
                 </p>
             </div>
         </div>
         <div class="row mb-2">
             <div class="col">
-                <h2><b>Račun br: @Model.brracuna/@Model.godina</b></h2>
+                <h2><b>Račun br: @Model.brracuna/@Model.datizdavanja.Year</b></h2>
                 <p>
                     <b>Datum izdavanja: @Model.datizdavanja</b>
                 </p>
@@ -62,9 +62,9 @@
                         {
                             <tr>
                                 <td>@count</td>
-                                <td>@item.artikal.naziv</td>
+                                <td>@item.nazivartikla</td>
                                 <td>@item.cenapojm din.</td>
-                                <td>@item.kolicina @item.artikal.jm</td>
+                                <td>@item.kolicina @item.jmartikla</td>
                                 <td>@item.ukupnacena din.</td>
                             </tr>
                             { count++; }

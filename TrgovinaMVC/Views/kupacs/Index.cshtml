@@ -23,8 +23,6 @@
     <tbody>
         @foreach (var item in Model)
         {
-            if (item.db_hidden == false)
-            {
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.pib)
@@ -45,7 +43,6 @@
                         <input type="button" value="Obriši" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalDel" onclick="prepareDelete('@item.pib', this)">
                     </td>
                 </tr>
-            }
         }
     </tbody>
 </table>

@@ -82,16 +82,14 @@ namespace TrgovinaMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "tipracuna, kupac, datvalute, stavkaracunas")] racun racun)
         {
-            racun.godina = DateTime.Now.Year;
-            racun.db_hidden = false;
             racun.datizdavanja = DateTime.Now;
             racun.brracuna = db.racuns.Where(o => o.tipracuna == racun.tipracuna).OrderBy(o => o.brracuna).Select(o => o.brracuna).FirstOrDefault() + 1;
-            racun.kupac = db.kupacs.Where(o => o.naziv == racun.kupac.naziv).FirstOrDefault();
+            racun.nazivkupca = db.kupacs.Where(o => o.naziv == racun.nazivkupca).FirstOrDefault().ToString();
             racun.ukupnacena = 0;
 
             foreach (stavkaracuna sr in racun.stavkaracunas)
             {
-                sr.artikal = db.artikals.Where(o => o.naziv == sr.artikal.naziv).FirstOrDefault();
+                sr.nazivartikla = db.artikals.Where(o => o.naziv == sr.nazivartikla).FirstOrDefault().ToString();
                 sr.ukupnacena = sr.kolicina * sr.cenapojm;
                 racun.ukupnacena += sr.ukupnacena;
             }
@@ -119,7 +117,7 @@ namespace TrgovinaMVC.Controllers
                 }
             }
 
-            ViewBag.pib = new SelectList(db.kupacs, "pib", "naziv", racun.pib);
+            //TODO ViewBag.pib = new SelectList(db.kupacs, "pib", "naziv", racun.pib);
             return View(racun);
         }
 
@@ -127,7 +125,6 @@ namespace TrgovinaMVC.Controllers
         public ActionResult Delete(int? idRacun)
         {
             racun racun = db.racuns.Find(idRacun);
-            racun.db_hidden = true;
             db.SaveChanges();
             return View(racun);
         }

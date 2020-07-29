@@ -10,8 +10,6 @@
         <EntityTypeShape EntityType="dbSTRModel.racun" Width="1.5" PointX="0.75" PointY="5" IsExpanded="true" />
         <EntityTypeShape EntityType="dbSTRModel.stavkaracuna" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <AssociationConnector Association="dbSTRModel.FK__stavkarac__idrac__3D5E1FD2" ManuallyRouted="false" />
-        <AssociationConnector Association="dbSTRModel.FK__racun__pib__6E01572D" />
-        <AssociationConnector Association="dbSTRModel.FK__stavkarac__idart__02084FDA" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

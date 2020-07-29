@@ -104,14 +104,12 @@
                 $('#kupac_naziv').autocomplete({
                     source: data,
                     delay: 0,
-                classes:
-                {
-                    "ui-autocomplete": "btn-light"
-                }
+                    classes:
+                    {
+                        "ui-autocomplete": "btn-light"
+                    }
                 })
 
-            //jsonKupci = JSON.parse(JSON.stringify(json))
-            //console.log(json)
 
             })
             $.get("/racuns/getNaziviArtikla", function (data) {
@@ -125,6 +123,7 @@
                 }
                 })
             })
+
 
         })
 

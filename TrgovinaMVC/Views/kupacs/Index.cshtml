@@ -96,7 +96,17 @@
 
     <script>
     var idDelete;
-    var elementDelete;
+        var elementDelete;
+
+                $("document").ready(function(){
+            var status = '@TempData["status"]'
+            console.log(status)
+            if (status == 'edited')
+                $.bootstrapGrowl("Uspešno ste izmenili podatke o kupcu.", { type: 'success' })
+            else if (status == 'added')
+                $.bootstrapGrowl("Uspešno ste dodali kupca.", { type: 'success' })
+
+        })
 
     function Edit(id) {
         $.get("/kupacs/Edit/" + id, function (data) {
@@ -129,6 +139,7 @@
                 data: { idKupac: idDelete },
                 complete: function () {
                     $(elementDelete).parents("tr").hide(250);
+                                        $.bootstrapGrowl("Uspešno ste obrisali kupca.", { type: 'danger' })
                 }
             });
     }

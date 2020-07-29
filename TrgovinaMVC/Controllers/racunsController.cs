@@ -45,7 +45,7 @@ namespace TrgovinaMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(racun);
+            return View("Racun", racun);
         }
 
         // GET: racuns/Create
@@ -87,10 +87,13 @@ namespace TrgovinaMVC.Controllers
             racun.datizdavanja = DateTime.Now;
             racun.brracuna = db.racuns.Where(o => o.tipracuna == racun.tipracuna).OrderBy(o => o.brracuna).Select(o => o.brracuna).FirstOrDefault() + 1;
             racun.kupac = db.kupacs.Where(o => o.naziv == racun.kupac.naziv).FirstOrDefault();
+            racun.ukupnacena = 0;
 
             foreach (stavkaracuna sr in racun.stavkaracunas)
             {
                 sr.artikal = db.artikals.Where(o => o.naziv == sr.artikal.naziv).FirstOrDefault();
+                sr.ukupnacena = sr.kolicina * sr.cenapojm;
+                racun.ukupnacena += sr.ukupnacena;
             }
 
             if (ModelState.IsValid)
@@ -99,6 +102,7 @@ namespace TrgovinaMVC.Controllers
                 {
                     db.racuns.Add(racun);
                     db.SaveChanges();
+                    TempData["status"] = "added";
                     return RedirectToAction("Index");
 
                 }

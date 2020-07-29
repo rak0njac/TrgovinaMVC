@@ -16,12 +16,12 @@ namespace TrgovinaMVC.Models
     {
         public int idracun { get; set; }
         public int idstavka { get; set; }
-        public int idartikal { get; set; }
         public decimal cenapojm { get; set; }
         public decimal kolicina { get; set; }
         public decimal ukupnacena { get; set; }
+        public Nullable<int> idartikal { get; set; }
     
-        public virtual artikal artikal { get; set; }
         public virtual racun racun { get; set; }
+        public virtual artikal artikal { get; set; }
     }
 }

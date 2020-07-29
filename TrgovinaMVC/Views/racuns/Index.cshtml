@@ -24,6 +24,14 @@
     var idDelete;
     var elementDelete;
 
+    $("document").ready(function () {
+                        var status = '@TempData["status"]'
+            console.log(status)
+            if (status == 'added')
+                $.bootstrapGrowl("Uspešno ste kreirali račun.", { type: 'success' })
+
+    })
+
     function prepareDelete(id, element) {
         idDelete = id
         elementDelete = element
@@ -36,6 +44,8 @@
                 data: { idRacun: idDelete },
                 complete: function () {
                     $(elementDelete).parents("tr").hide(250);
+                                                            $.bootstrapGrowl("Uspešno ste obrisali račun.", { type: 'danger' })
+
                 }
             });
     }

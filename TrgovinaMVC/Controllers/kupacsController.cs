@@ -43,6 +43,8 @@ namespace TrgovinaMVC.Controllers
                 {
                     db.kupacs.Add(kupac);
                     db.SaveChanges();
+                    TempData["status"] = "added";
+
                     return RedirectToAction("Index");
 
                 }
@@ -89,6 +91,7 @@ namespace TrgovinaMVC.Controllers
             {
                 db.Entry(kupac).State = EntityState.Modified;
                 db.SaveChanges();
+                TempData["status"] = "edited";
                 return RedirectToAction("Index");
             }
             return PartialView("Form", kupac);

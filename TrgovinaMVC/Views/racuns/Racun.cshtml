@@ -2,89 +2,83 @@
 
 @{
     Layout = null;
+    int count = 1;
 }
 
 <!DOCTYPE html>
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
     <title>Racun</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div>
-        <h4>racun</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.brracuna)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.brracuna)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.tipracuna)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.tipracuna)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.godina)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.godina)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.datizdavanja)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.datizdavanja)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.datvalute)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.datvalute)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.ukupnacena)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.ukupnacena)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.db_hidden)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.db_hidden)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.kupac.naziv)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.kupac.naziv)
-            </dd>
-    
-        </dl>
-    </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.idracun }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
+    <div class="container">
+        <div class="row mb-2">
+            <div class="col col-3">
+                <p>
+                    <b>Naziv firme</b><br />
+                                  <b>Adresa firme</b><br />
+                                   <b>Broj telefona</b><br/>
+                                    <b>PIB</b><br/>
+                          <b>Maticni broj</b>
+</p>
+            </div>
+            <div class="col col-6 text-center">
+                <h1>LOGO FIRME</h1>
+            </div>
+            <div class="col col-3 text-right">
+                <p>
+                    <b>@Model.kupac.naziv</b><br />
+                    <b>@Model.kupac.adresa</b><br />
+                    <b>@Model.kupac.brtel</b><br />
+                                             <b>@Model.kupac.pib</b>
+                </p>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <h2><b>Račun br: @Model.brracuna/@Model.godina</b></h2>
+                <p>
+                    <b>Datum izdavanja: @Model.datizdavanja</b>
+                </p>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Rb</th>
+                            <th>Artikal</th>
+                            <th>Cena po JM</th>
+                            <th>Količina</th>
+                            <th>Ukupna cena</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.stavkaracunas)
+                        {
+                            <tr>
+                                <td>@count</td>
+                                <td>@item.artikal.naziv</td>
+                                <td>@item.cenapojm din.</td>
+                                <td>@item.kolicina @item.artikal.jm</td>
+                                <td>@item.ukupnacena din.</td>
+                            </tr>
+                            { count++; }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        <div class="row">
+            <div class="col">
+                <h3>Ukupno: @Model.ukupnacena din.</h3>
+                <hr />
+            </div>
+            </div>
+        </div>
 </body>
 </html>

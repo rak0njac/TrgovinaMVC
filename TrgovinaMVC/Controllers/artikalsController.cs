@@ -17,6 +17,7 @@ namespace TrgovinaMVC.Controllers
         // GET: artikals
         public ActionResult Index()
         {
+            //TempData["status"] = "none";
             return View(db.artikals.ToList());
         }
 
@@ -39,6 +40,8 @@ namespace TrgovinaMVC.Controllers
             {
                 db.artikals.Add(artikal);
                 db.SaveChanges();
+                TempData["status"] = "added";
+
                 return RedirectToAction("Index");
             }
 
@@ -71,6 +74,7 @@ namespace TrgovinaMVC.Controllers
             {
                 db.Entry(artikal).State = EntityState.Modified;
                 db.SaveChanges();
+                TempData["status"] = "edited";
                 return RedirectToAction("Index");
             }
             return PartialView("Form", artikal);

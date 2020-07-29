@@ -24,7 +24,7 @@ namespace TrgovinaMVC.Models
         public string naziv { get; set; }
         public decimal cena { get; set; }
         public string jm { get; set; }
-        public Nullable<decimal> kolnastanju { get; set; }
+        public decimal kolnastanju { get; set; }
         public Nullable<bool> db_hidden { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

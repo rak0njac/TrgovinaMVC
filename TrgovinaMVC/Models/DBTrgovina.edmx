@@ -17,11 +17,12 @@
         </EntityType>
         <EntityType Name="kupac">
           <Key>
-            <PropertyRef Name="pib" />
+            <PropertyRef Name="idkupac" />
           </Key>
-          <Property Name="pib" Type="varchar" MaxLength="9" Nullable="false" />
-          <Property Name="naziv" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="adresa" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="idkupac" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="pib" Type="varchar" MaxLength="9" />
+          <Property Name="naziv" Type="varchar" MaxLength="50" />
+          <Property Name="adresa" Type="varchar" MaxLength="50" />
           <Property Name="brtel" Type="varchar" MaxLength="12" />
         </EntityType>
         <EntityType Name="racun">
@@ -90,12 +91,13 @@
         </EntityType>
         <EntityType Name="kupac">
           <Key>
-            <PropertyRef Name="pib" />
+            <PropertyRef Name="idkupac" />
           </Key>
-          <Property Name="pib" Type="String" MaxLength="9" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="naziv" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="adresa" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="pib" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="naziv" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="adresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="brtel" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="idkupac" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="racun">
           <Key>
@@ -169,6 +171,7 @@
           <EntitySetMapping Name="kupacs">
             <EntityTypeMapping TypeName="dbSTRModel.kupac">
               <MappingFragment StoreEntitySet="kupac">
+                <ScalarProperty Name="idkupac" ColumnName="idkupac" />
                 <ScalarProperty Name="pib" ColumnName="pib" />
                 <ScalarProperty Name="naziv" ColumnName="naziv" />
                 <ScalarProperty Name="adresa" ColumnName="adresa" />

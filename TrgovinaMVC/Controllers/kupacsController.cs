@@ -65,7 +65,7 @@ namespace TrgovinaMVC.Controllers
         }
 
         // GET: kupacs/Edit/5
-        public ActionResult Edit(string id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
@@ -84,7 +84,7 @@ namespace TrgovinaMVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "pib,naziv,adresa,brtel")] kupac kupac)
+        public ActionResult Edit([Bind(Include = "idkupac,pib,naziv,adresa,brtel")] kupac kupac)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace TrgovinaMVC.Controllers
             return PartialView("Form", kupac);
         }
 
-        public ActionResult Delete(string idKupac)
+        public ActionResult Delete(int idKupac)
         {
             kupac kupac = db.kupacs.Find(idKupac);
             db.SaveChanges();

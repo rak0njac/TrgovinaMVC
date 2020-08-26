@@ -18,5 +18,6 @@ namespace TrgovinaMVC.Models
         public string naziv { get; set; }
         public string adresa { get; set; }
         public string brtel { get; set; }
+        public int idkupac { get; set; }
     }
 }

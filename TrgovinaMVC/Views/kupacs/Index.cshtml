@@ -37,10 +37,10 @@
                         @Html.DisplayFor(modelItem => item.brtel)
                     </td>
                     <td>
-                        <input type="button" value="Izmeni" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalEdit" onclick="Edit('@item.pib')">
+                        <input type="button" value="Izmeni" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalEdit" onclick="Edit(@item.idkupac)">
                     </td>
                     <td>
-                        <input type="button" value="Obriši" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalDel" onclick="prepareDelete('@item.pib', this)">
+                        <input type="button" value="Obriši" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalDel" onclick="prepareDelete(@item.idkupac, this)">
                     </td>
                 </tr>
         }
@@ -108,6 +108,8 @@
     function Edit(id) {
         $.get("/kupacs/Edit/" + id, function (data) {
             $("#edit_modal_body").html(data)
+                            $("#modalEdit").find("h5").text("Izmena")
+
             $('form').removeData('validator');
             $('form').removeData('unobtrusiveValidation');
             $.validator.unobtrusive.parse('form');
@@ -117,6 +119,8 @@
         function Create() {
             $.get("/kupacs/Create", function (data) {
                 $("#edit_modal_body").html(data)
+                                $("#modalEdit").find("h5").text("Kreiranje")
+
                 $('form').removeData('validator');
                 $('form').removeData('unobtrusiveValidation');
                 $.validator.unobtrusive.parse('form');

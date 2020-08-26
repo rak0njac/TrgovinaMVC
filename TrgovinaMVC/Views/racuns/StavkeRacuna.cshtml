@@ -6,8 +6,8 @@
         <div>
             <div>
                 @*<input type="hidden" name="artikal.naziv.Index" value="" />*@
-                @Html.EditorFor(model => model.artikal.naziv, new { htmlAttributes = new { @class = "form-control", @data_orgname = "artikal.naziv" } })
-                @Html.ValidationMessageFor(model => model.artikal.naziv, "", new { @class = "text-danger", @data_orgname = "artikal.naziv" })
+                @Html.EditorFor(model => model.nazivartikla, new { htmlAttributes = new { @class = "form-control", @data_orgname = "artikal.naziv" } })
+                @Html.ValidationMessageFor(model => model.nazivartikla, "", new { @class = "text-danger", @data_orgname = "artikal.naziv" })
             </div>
         </div>
     </td>
@@ -32,7 +32,7 @@
     <td>
         <div>
             <div>
-                <input type="button" value="Obriši" class="btn btn-primary" onclick="DeleteStavka(this)" @*style="display:none"*@ />
+                <input type="button" value="Obriši" class="btn btn-primary" onclick="DeleteStavka(this)" style="display:none" />
             </div>
         </div>
     </td>

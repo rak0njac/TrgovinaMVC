@@ -11,10 +11,13 @@ namespace TrgovinaMVC.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class artikal
     {
         public int idartikal { get; set; }
+
+        [Required(ErrorMessage="Morate uneti naziv!")]
         public string naziv { get; set; }
         public decimal cena { get; set; }
         public string jm { get; set; }

@@ -31,14 +31,14 @@
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.nazivkupca, "Kupac:", htmlAttributes: new { @class = "control-label mr-3" })
-                    <div>
+                    <div id="dropdown_kupci">
                         @Html.DropDownListFor(model => model.nazivkupca, ViewBag.kupci as SelectList, "Fizičko lice", htmlAttributes: new { @class = "form-control mr-3" })
                     </div>
                 </div>
                 <div class="form-group" id="id-date" style="display:none">
                     @Html.LabelFor(model => model.datvalute, "Datum valute:", htmlAttributes: new { @class = "control-label mr-3" })
                     <div>
-                        @Html.EditorFor(model => model.datvalute, new { htmlAttributes = new { @class = "form-control mr-3", @data_provide = "datepicker", @autocomplete = "off" } })
+                        @Html.EditorFor(model => model.datvalute, new { htmlAttributes = new { @class = "form-control mr-3", @data_provide = "datepicker", @autocomplete = "off", @required = "true" } })
                     </div>
                 </div>
             </div>
@@ -150,9 +150,18 @@
         }
 
     function Visible(val) {
-        if (val == "Virman")
+        if (val == "Virman") {
             $("#id-date").fadeIn(250);
-        else $("#id-date").fadeOut(250);
+            $("#dropdown_kupci").find("option:contains(Fizičko lice)").remove()
+        }
+        else {
+            $("#id-date").fadeOut(250);
+            $("#id-date").find("input").val("")
+            var opt = new Option("Fizičko lice", "")
+            $("#dropdown_kupci").find("select").prepend(opt)
+            opt.selected = true;
+
+        } 
         }
 
         function checkStavke() {

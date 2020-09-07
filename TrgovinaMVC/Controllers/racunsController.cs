@@ -146,6 +146,8 @@ namespace TrgovinaMVC.Controllers
         public ActionResult Delete(int? idRacun)
         {
             racun racun = db.racuns.Find(idRacun);
+            db.stavkaracunas.RemoveRange(racun.stavkaracunas);
+            db.racuns.Remove(racun);
             db.SaveChanges();
             return View(racun);
         }

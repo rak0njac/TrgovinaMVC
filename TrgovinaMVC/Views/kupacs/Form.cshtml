@@ -12,7 +12,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.pib, "PIB", htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.pib, new { htmlAttributes = new { @class = "form-control", @maxlength = "9" } })
+                @Html.EditorFor(model => model.pib, new { htmlAttributes = new { @class = "form-control", @maxlength = "9", @autocomplete = "off" } })
                 @Html.ValidationMessageFor(model => model.pib, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -20,7 +20,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.naziv, "Naziv", htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.naziv, new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
+                @Html.EditorFor(model => model.naziv, new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @autocomplete = "off" } })
                 @Html.ValidationMessageFor(model => model.naziv, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -28,7 +28,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.adresa, "Adresa", htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.adresa, new { htmlAttributes = new { @class = "form-control", @maxlength = "50" } })
+                @Html.EditorFor(model => model.adresa, new { htmlAttributes = new { @class = "form-control", @maxlength = "50", @autocomplete = "off" } })
                 @Html.ValidationMessageFor(model => model.adresa, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -36,7 +36,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.brtel, "Broj telefona", htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.brtel, new { htmlAttributes = new { @class = "form-control", @maxlength = "12" } })
+                @Html.EditorFor(model => model.brtel, new { htmlAttributes = new { @class = "form-control", @maxlength = "12", @autocomplete = "off" } })
                 @Html.ValidationMessageFor(model => model.brtel, "", new { @class = "text-danger" })
             </div>
         </div>

@@ -53,15 +53,8 @@ namespace TrgovinaMVC.Controllers
         {
             ViewBag.pib = new SelectList(db.kupacs, "pib", "naziv");
 
-            
-           List<string> kupci = db.kupacs.Select(o => o.naziv).ToList();
-            List<SelectListItem> sli = new List<SelectListItem>();
-            sli.Add(new SelectListItem { Text = "Fizicko lice", Value = "Fizicko lice" });
-            foreach (string k in kupci)
-            {
-                sli.Add(new SelectListItem { Text = k, Value = k });
-            }
-            ViewBag.kupci = sli;
+            SelectList kupci = new SelectList(db.kupacs.Select(o => o.naziv));
+            ViewBag.kupci = kupci;
             ViewBag.artikli = new SelectList(db.artikals.Select(o => o.naziv));
             return View();
         }
@@ -105,10 +98,10 @@ namespace TrgovinaMVC.Controllers
             artikal artikal;
             if(racun.tipracuna == "Virman")
             {
-                racun.nazivkupca = kupac.naziv;
-                racun.pibkupca = kupac.pib;
-                racun.adresakupca = kupac.adresa;
-                racun.brtelkupca = kupac.brtel;
+                                racun.nazivkupca = kupac.naziv;
+            racun.pibkupca = kupac.pib;
+            racun.adresakupca = kupac.adresa;
+            racun.brtelkupca = kupac.brtel;
             }
 
             racun.ukupnacena = 0;

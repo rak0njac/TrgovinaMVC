@@ -32,7 +32,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.nazivkupca, "Kupac:", htmlAttributes: new { @class = "control-label mr-3" })
                     <div>
-                        @Html.EditorFor(model => model.nazivkupca, new { htmlAttributes = new { @class = "form-control mr-3" } })
+                        @Html.DropDownListFor(model => model.nazivkupca, ViewBag.kupci as List<SelectListItem>, htmlAttributes: new { @class = "form-control mr-3" })
                     </div>
                 </div>
                 <div class="form-group" id="id-date" style="display:none">
@@ -89,7 +89,7 @@
         var brojStavki = 1
 
         $("document").ready(function () {
-            $("#stavke").find("input[type='text']").each(function () {
+            $("#stavke").find("input[type='number'], select").each(function () {
                 var name = $(this).attr("name")
                 name = "stavkaracunas[0]." + name
                 $(this).attr("name", name)
@@ -127,6 +127,7 @@
                 })
             })
 
+            artikalChange($("#nazivartikla"))
 
         })
 
@@ -136,6 +137,17 @@
             $.validator.unobtrusive.parse('form');
         }
 
+        function artikalChange(param) {
+            var artikal = $(param).val()
+            console.log(artikal)
+            var cenaField = $(param).parents("tr").find("input[name*='cenapojm']")
+                        var kolicinaField = $(param).parents("tr").find("input[name*='kolicina']")
+            console.log(cenaField)
+            var cenaPoJm = $.get("/racuns/getCenaPoJm/" + artikal, function (data) {
+                $(cenaField).val(data)
+                $(kolicinaField).val(0)
+            })
+        }
 
     function Visible(val) {
         if (val == "Virman")
@@ -163,14 +175,7 @@
             newrow.show(250)
             newrow.find("input[type='text']").val("")
             newrow.find("span[id*='error']").text("")
-            newrow.find("input[name*='artikal']").autocomplete({
-                source: naziviArtikla,
-                    delay: 0,
-                classes:
-                {
-                    "ui-autocomplete": "btn-light"
-                }
-                })
+            artikalChange(newrow.find("select"))
             resetIndex()
             ResetValidator()
 
@@ -191,7 +196,7 @@
             $("tbody").children("tr").each(function (index) {
                 console.log(index)
 
-                var inputs = $(this).find("input[type='text']")
+                var inputs = $(this).find("input[type='number'], select")
                 console.log(inputs)
                 $.each(inputs, function () {
                     

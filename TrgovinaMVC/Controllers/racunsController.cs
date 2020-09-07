@@ -52,6 +52,17 @@ namespace TrgovinaMVC.Controllers
         public ActionResult Create()
         {
             ViewBag.pib = new SelectList(db.kupacs, "pib", "naziv");
+
+            
+           List<string> kupci = db.kupacs.Select(o => o.naziv).ToList();
+            List<SelectListItem> sli = new List<SelectListItem>();
+            sli.Add(new SelectListItem { Text = "Fizicko lice", Value = "Fizicko lice" });
+            foreach (string k in kupci)
+            {
+                sli.Add(new SelectListItem { Text = k, Value = k });
+            }
+            ViewBag.kupci = sli;
+            ViewBag.artikli = new SelectList(db.artikals.Select(o => o.naziv));
             return View();
         }
 
@@ -67,6 +78,12 @@ namespace TrgovinaMVC.Controllers
             return Json(nazivi, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult getCenaPoJm(string id)
+        {
+            artikal artikal = db.artikals.Where(x => x.naziv == id).FirstOrDefault();
+            return Content(artikal.cena.ToString());
+        }
+
         [HttpPost]
         public ActionResult addStavka([Bind] racun racun)
         {
@@ -80,16 +97,27 @@ namespace TrgovinaMVC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "tipracuna, kupac, datvalute, stavkaracunas")] racun racun)
+        public ActionResult Create([Bind(Include = "tipracuna, nazivkupca, datvalute, stavkaracunas")] racun racun)
         {
             racun.datizdavanja = DateTime.Now;
             racun.brracuna = db.racuns.Where(o => o.tipracuna == racun.tipracuna).OrderBy(o => o.brracuna).Select(o => o.brracuna).FirstOrDefault() + 1;
-            racun.nazivkupca = db.kupacs.Where(o => o.naziv == racun.nazivkupca).FirstOrDefault().ToString();
+            kupac kupac = db.kupacs.Where(o => o.naziv == racun.nazivkupca).FirstOrDefault();
+            artikal artikal;
+            if(racun.tipracuna == "Virman")
+            {
+                racun.nazivkupca = kupac.naziv;
+                racun.pibkupca = kupac.pib;
+                racun.adresakupca = kupac.adresa;
+                racun.brtelkupca = kupac.brtel;
+            }
+
             racun.ukupnacena = 0;
 
             foreach (stavkaracuna sr in racun.stavkaracunas)
             {
-                sr.nazivartikla = db.artikals.Where(o => o.naziv == sr.nazivartikla).FirstOrDefault().ToString();
+                artikal = db.artikals.Where(o => o.naziv == sr.nazivartikla).FirstOrDefault();
+                sr.nazivartikla = artikal.naziv;
+                sr.jmartikla = artikal.jm;
                 sr.ukupnacena = sr.kolicina * sr.cenapojm;
                 racun.ukupnacena += sr.ukupnacena;
             }

@@ -36,7 +36,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.brtel, "Broj telefona", htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.brtel, new { htmlAttributes = new { @class = "form-control", @maxlength = "30" } })
+                @Html.EditorFor(model => model.brtel, new { htmlAttributes = new { @class = "form-control", @maxlength = "12" } })
                 @Html.ValidationMessageFor(model => model.brtel, "", new { @class = "text-danger" })
             </div>
         </div>

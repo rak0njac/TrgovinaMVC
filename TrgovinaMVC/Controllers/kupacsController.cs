@@ -96,9 +96,11 @@ namespace TrgovinaMVC.Controllers
             return PartialView("Form", kupac);
         }
 
+        [HttpPost]
         public ActionResult Delete(int idKupac)
         {
             kupac kupac = db.kupacs.Find(idKupac);
+            db.kupacs.Remove(kupac);
             db.SaveChanges();
             return new EmptyResult();
         }

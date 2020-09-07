@@ -80,9 +80,11 @@ namespace TrgovinaMVC.Controllers
         }
 
         // GET: artikals/Delete/5
+        [HttpPost]
         public ActionResult Delete(int? idArt)
         {
             artikal artikal = db.artikals.Find(idArt);
+            db.artikals.Remove(artikal);
             db.SaveChanges();
             return View(artikal);
         }

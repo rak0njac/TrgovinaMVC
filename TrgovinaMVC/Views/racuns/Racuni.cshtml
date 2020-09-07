@@ -38,7 +38,7 @@
                         @Html.DisplayFor(modelItem => item.ukupnacena)
                     </td>
                     <td>
-                        <input type="button" value="Prikaži" class="btn btn-primary btn-sm" onclick="location.href='@Url.Action("Show", new { id = item.idracun })'">
+                        <input type="button" value="Prikaži" class="btn btn-primary btn-sm" onclick="window.open('@Url.Action("Show", new { id = item.idracun })', '_blank')">
                     </td>
                     <td>
                         <input type="button" value="Obriši" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalDel" onclick="prepareDelete(@item.idracun, this)">

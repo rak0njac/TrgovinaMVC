@@ -1,0 +1,4 @@
+﻿GROWL za brisanje racuna ne radi kad je virman
+Otvori dropdown nakon dodavanja nove stavke
+Datum izdavanja i valute da prikazuju samo datum, ne i vreme
+Ako je kupac null, prikazati fizičko lice

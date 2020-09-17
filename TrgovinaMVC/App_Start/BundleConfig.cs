@@ -11,7 +11,7 @@ namespace TrgovinaMVC
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-3.4.1.min.js",
                         "~/Scripts/jquery-ui-1.12.1.min.js",
-                        "~/Scripts/jquery.bootstrap-growl.js"));
+                        "~/Scripts/jquery.bootstrap-growl.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate.min.js",

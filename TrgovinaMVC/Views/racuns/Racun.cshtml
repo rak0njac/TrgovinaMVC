@@ -30,10 +30,17 @@
             </div>
             <div class="col col-3 text-right">
                 <p>
-                    <b>@Model.nazivkupca</b><br />
-                    <b>@Model.adresakupca</b><br />
-                    <b>@Model.brtelkupca</b><br />
-                                             <b>@Model.pibkupca</b>
+                    @if (Model.nazivkupca == null)
+                    {
+                        @:<b>Fizičko lice</b><br />
+                    }
+                    else
+                    {
+                        <b>@Model.nazivkupca</b><br />
+                        <b>@Model.adresakupca</b><br />
+                        <b>@Model.brtelkupca</b><br />
+                        <b>@Model.pibkupca</b>
+                    }
                 </p>
             </div>
         </div>

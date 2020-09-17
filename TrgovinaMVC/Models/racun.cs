@@ -11,7 +11,8 @@ namespace TrgovinaMVC.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class racun
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -23,7 +24,9 @@ namespace TrgovinaMVC.Models
         public int idracun { get; set; }
         public int brracuna { get; set; }
         public string tipracuna { get; set; }
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public System.DateTime datizdavanja { get; set; }
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public Nullable<System.DateTime> datvalute { get; set; }
         public decimal ukupnacena { get; set; }
         public string nazivkupca { get; set; }

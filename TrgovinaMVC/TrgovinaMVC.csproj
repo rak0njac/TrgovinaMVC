@@ -224,9 +224,9 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\artikals\Form.cshtml" />
+    <Content Include="Views\artikals\FormCreate.cshtml" />
     <Content Include="Views\artikals\Index.cshtml" />
-    <Content Include="Views\kupacs\Form.cshtml" />
+    <Content Include="Views\kupacs\FormCreate.cshtml" />
     <Content Include="Views\kupacs\Index.cshtml" />
     <Content Include="Views\racuns\Create.cshtml" />
     <Content Include="Views\racuns\Index.cshtml" />
@@ -239,6 +239,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\artikals\FormEdit.cshtml" />
+    <Content Include="Views\kupacs\FormEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />

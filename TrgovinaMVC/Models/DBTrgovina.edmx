@@ -14,6 +14,7 @@
           <Property Name="cena" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="jm" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="kolnastanju" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="aktivan" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="kupac">
           <Key>
@@ -24,6 +25,7 @@
           <Property Name="naziv" Type="varchar" MaxLength="50" />
           <Property Name="adresa" Type="varchar" MaxLength="50" />
           <Property Name="brtel" Type="varchar" MaxLength="12" />
+          <Property Name="aktivan" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="racun">
           <Key>
@@ -35,10 +37,7 @@
           <Property Name="datizdavanja" Type="date" Nullable="false" />
           <Property Name="datvalute" Type="date" />
           <Property Name="ukupnacena" Type="numeric" Precision="30" Scale="2" Nullable="false" />
-          <Property Name="nazivkupca" Type="varchar" MaxLength="50" />
-          <Property Name="pibkupca" Type="varchar" MaxLength="9" />
-          <Property Name="adresakupca" Type="varchar" MaxLength="50" />
-          <Property Name="brtelkupca" Type="varchar" MaxLength="12" />
+          <Property Name="idkupac" Type="int" />
         </EntityType>
         <EntityType Name="stavkaracuna">
           <Key>
@@ -50,9 +49,32 @@
           <Property Name="cenapojm" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="kolicina" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="ukupnacena" Type="numeric" Precision="24" Scale="2" Nullable="false" />
-          <Property Name="nazivartikla" Type="varchar" MaxLength="30" Nullable="false" />
-          <Property Name="jmartikla" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="idartikal" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK__racun__idkupac__4AB81AF0">
+          <End Role="kupac" Type="Self.kupac" Multiplicity="0..1" />
+          <End Role="racun" Type="Self.racun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="kupac">
+              <PropertyRef Name="idkupac" />
+            </Principal>
+            <Dependent Role="racun">
+              <PropertyRef Name="idkupac" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__stavkarac__idart__4BAC3F29">
+          <End Role="artikal" Type="Self.artikal" Multiplicity="1" />
+          <End Role="stavkaracuna" Type="Self.stavkaracuna" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="artikal">
+              <PropertyRef Name="idartikal" />
+            </Principal>
+            <Dependent Role="stavkaracuna">
+              <PropertyRef Name="idartikal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__stavkarac__idrac__2C3393D0">
           <End Role="racun" Type="Self.racun" Multiplicity="1" />
           <End Role="stavkaracuna" Type="Self.stavkaracuna" Multiplicity="*" />
@@ -70,6 +92,14 @@
           <EntitySet Name="kupac" EntityType="Self.kupac" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="racun" EntityType="Self.racun" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="stavkaracuna" EntityType="Self.stavkaracuna" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__racun__idkupac__4AB81AF0" Association="Self.FK__racun__idkupac__4AB81AF0">
+            <End Role="kupac" EntitySet="kupac" />
+            <End Role="racun" EntitySet="racun" />
+          </AssociationSet>
+          <AssociationSet Name="FK__stavkarac__idart__4BAC3F29" Association="Self.FK__stavkarac__idart__4BAC3F29">
+            <End Role="artikal" EntitySet="artikal" />
+            <End Role="stavkaracuna" EntitySet="stavkaracuna" />
+          </AssociationSet>
           <AssociationSet Name="FK__stavkarac__idrac__2C3393D0" Association="Self.FK__stavkarac__idrac__2C3393D0">
             <End Role="racun" EntitySet="racun" />
             <End Role="stavkaracuna" EntitySet="stavkaracuna" />
@@ -88,6 +118,8 @@
           <Property Name="cena" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="jm" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="kolnastanju" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="aktivan" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="stavkaracunas" Relationship="dbSTRModel.FK__stavkarac__idart__4BAC3F29" FromRole="artikal" ToRole="stavkaracuna" />
         </EntityType>
         <EntityType Name="kupac">
           <Key>
@@ -98,6 +130,8 @@
           <Property Name="adresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="brtel" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
           <Property Name="idkupac" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="aktivan" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="racuns" Relationship="dbSTRModel.FK__racun__idkupac__4AB81AF0" FromRole="kupac" ToRole="racun" />
         </EntityType>
         <EntityType Name="racun">
           <Key>
@@ -110,10 +144,8 @@
           <Property Name="datvalute" Type="DateTime" Precision="0" />
           <Property Name="ukupnacena" Type="Decimal" Precision="30" Scale="2" Nullable="false" />
           <NavigationProperty Name="stavkaracunas" Relationship="Self.FK__stavkarac__idrac__3D5E1FD2" FromRole="racun" ToRole="stavkaracuna" />
-          <Property Name="nazivkupca" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="pibkupca" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
-          <Property Name="adresakupca" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="brtelkupca" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="idkupac" Type="Int32" Nullable="true" />
+          <NavigationProperty Name="kupac" Relationship="dbSTRModel.FK__racun__idkupac__4AB81AF0" FromRole="racun" ToRole="kupac" />
         </EntityType>
         <EntityType Name="stavkaracuna">
           <Key>
@@ -126,8 +158,8 @@
           <Property Name="kolicina" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="ukupnacena" Type="Decimal" Precision="24" Scale="2" Nullable="false" />
           <NavigationProperty Name="racun" Relationship="Self.FK__stavkarac__idrac__3D5E1FD2" FromRole="stavkaracuna" ToRole="racun" />
-          <Property Name="nazivartikla" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="jmartikla" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="idartikal" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="artikal" Relationship="dbSTRModel.FK__stavkarac__idart__4BAC3F29" FromRole="stavkaracuna" ToRole="artikal" />
         </EntityType>
         <Association Name="FK__stavkarac__idrac__3D5E1FD2">
           <End Role="racun" Type="Self.racun" Multiplicity="1" />
@@ -150,7 +182,39 @@
             <End Role="racun" EntitySet="racuns" />
             <End Role="stavkaracuna" EntitySet="stavkaracunas" />
           </AssociationSet>
+          <AssociationSet Name="FK__stavkarac__idart__4BAC3F29" Association="dbSTRModel.FK__stavkarac__idart__4BAC3F29">
+            <End Role="artikal" EntitySet="artikals" />
+            <End Role="stavkaracuna" EntitySet="stavkaracunas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__racun__idkupac__4AB81AF0" Association="dbSTRModel.FK__racun__idkupac__4AB81AF0">
+            <End Role="kupac" EntitySet="kupacs" />
+            <End Role="racun" EntitySet="racuns" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK__stavkarac__idart__4BAC3F29">
+          <End Type="dbSTRModel.artikal" Role="artikal" Multiplicity="1" />
+          <End Type="dbSTRModel.stavkaracuna" Role="stavkaracuna" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="artikal">
+              <PropertyRef Name="idartikal" />
+            </Principal>
+            <Dependent Role="stavkaracuna">
+              <PropertyRef Name="idartikal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__racun__idkupac__4AB81AF0">
+          <End Type="dbSTRModel.kupac" Role="kupac" Multiplicity="0..1" />
+          <End Type="dbSTRModel.racun" Role="racun" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="kupac">
+              <PropertyRef Name="idkupac" />
+            </Principal>
+            <Dependent Role="racun">
+              <PropertyRef Name="idkupac" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -160,6 +224,7 @@
           <EntitySetMapping Name="artikals">
             <EntityTypeMapping TypeName="dbSTRModel.artikal">
               <MappingFragment StoreEntitySet="artikal">
+                <ScalarProperty Name="aktivan" ColumnName="aktivan" />
                 <ScalarProperty Name="idartikal" ColumnName="idartikal" />
                 <ScalarProperty Name="naziv" ColumnName="naziv" />
                 <ScalarProperty Name="cena" ColumnName="cena" />
@@ -171,6 +236,7 @@
           <EntitySetMapping Name="kupacs">
             <EntityTypeMapping TypeName="dbSTRModel.kupac">
               <MappingFragment StoreEntitySet="kupac">
+                <ScalarProperty Name="aktivan" ColumnName="aktivan" />
                 <ScalarProperty Name="idkupac" ColumnName="idkupac" />
                 <ScalarProperty Name="pib" ColumnName="pib" />
                 <ScalarProperty Name="naziv" ColumnName="naziv" />
@@ -182,10 +248,7 @@
           <EntitySetMapping Name="racuns">
             <EntityTypeMapping TypeName="dbSTRModel.racun">
               <MappingFragment StoreEntitySet="racun">
-                <ScalarProperty Name="brtelkupca" ColumnName="brtelkupca" />
-                <ScalarProperty Name="adresakupca" ColumnName="adresakupca" />
-                <ScalarProperty Name="pibkupca" ColumnName="pibkupca" />
-                <ScalarProperty Name="nazivkupca" ColumnName="nazivkupca" />
+                <ScalarProperty Name="idkupac" ColumnName="idkupac" />
                 <ScalarProperty Name="idracun" ColumnName="idracun" />
                 <ScalarProperty Name="brracuna" ColumnName="brracuna" />
                 <ScalarProperty Name="tipracuna" ColumnName="tipracuna" />
@@ -198,8 +261,7 @@
           <EntitySetMapping Name="stavkaracunas">
             <EntityTypeMapping TypeName="dbSTRModel.stavkaracuna">
               <MappingFragment StoreEntitySet="stavkaracuna">
-                <ScalarProperty Name="jmartikla" ColumnName="jmartikla" />
-                <ScalarProperty Name="nazivartikla" ColumnName="nazivartikla" />
+                <ScalarProperty Name="idartikal" ColumnName="idartikal" />
                 <ScalarProperty Name="idracun" ColumnName="idracun" />
                 <ScalarProperty Name="idstavka" ColumnName="idstavka" />
                 <ScalarProperty Name="cenapojm" ColumnName="cenapojm" />

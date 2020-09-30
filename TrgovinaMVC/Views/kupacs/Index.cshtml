@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<TrgovinaMVC.Models.kupac>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Kupci";
 }
 
-<div class="row">
-    <input type="button" value="Kreiraj novog kupca" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalEdit" onclick="Create()">
-</div>
+    <div class="row">
+        <input id="btnCreate" type="button" value="Kreiraj novog kupca" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modal">
+    </div>
 
 <h2>Lista kupaca</h2>
 <table class="table table-hover">
@@ -23,66 +23,47 @@
     <tbody>
         @foreach (var item in Model)
         {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.pib)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.naziv)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.adresa)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.brtel)
-                    </td>
-                    <td>
-                        <input type="button" value="Izmeni" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalEdit" onclick="Edit(@item.idkupac)">
-                    </td>
-                    <td>
-                        <input type="button" value="Obriši" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalDel" onclick="prepareDelete(@item.idkupac, this)">
-                    </td>
-                </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.pib)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.naziv)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.adresa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.brtel)
+            </td>
+            <td>
+                <input type="button" data-id="@item.idkupac" value="Izmeni" class="btn btn-primary btn-sm btnEdit" data-toggle="modal" data-target="#modal">
+            </td>
+            <td>
+                <input type="button" data-id="@item.idkupac" value="Obriši" class="btn btn-primary btn-sm btnDel" data-toggle="modal" data-target="#modal">
+            </td>
+        </tr>
         }
     </tbody>
 </table>
 
-<!-- Modal Edit -->
-<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="title">Izmena</h5>
+                <h5 class="modal-title" id="modal-title"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div id="edit_modal_body" class="modal-body">
+            <div id="modal-body" class="modal-body">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Poništi</button>
-                <input type="submit" class="btn btn-primary" form="form" value="Potvrdi" />
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Del -->
-<div class="modal fade" id="modalDel" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="title">Potvrda</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Da li ste sigurni da želite da obrišete ovog kupca?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Poništi</button>
-                <button type="button" class="btn btn-primary" onclick="Submit()" data-dismiss="modal">Potvrdi</button>
+                <div id="modal-submit">
+                    <input type="submit" class="btn btn-primary" form="form" value="Potvrdi" />
+                </div>
             </div>
         </div>
     </div>
@@ -90,57 +71,69 @@
 
 @section scripts {
     <script>
-    var idDelete;
-        var elementDelete;
 
-                $("document").ready(function(){
+
+        $("document").ready(function(){
             var status = '@TempData["status"]'
-            console.log(status)
             if (status == 'edited')
                 $.bootstrapGrowl("Uspešno ste izmenili podatke o kupcu.", { type: 'success' })
             else if (status == 'added')
                 $.bootstrapGrowl("Uspešno ste dodali kupca.", { type: 'success' })
-
+            else if (status == 'nameConflict')
+                $.bootstrapGrowl("Već postoji kupac sa ovim PIB-om.", { type: 'danger' })
         })
 
-    function Edit(id) {
-        $.get("/kupacs/Edit/" + id, function (data) {
-            $("#edit_modal_body").html(data)
-                            $("#modalEdit").find("h5").text("Izmena")
-
-            $('form').removeData('validator');
+                function parseValidator() {
+                        $('form').removeData('validator');
             $('form').removeData('unobtrusiveValidation');
             $.validator.unobtrusive.parse('form');
-        })
         }
 
-        function Create() {
-            $.get("/kupacs/Create", function (data) {
-                $("#edit_modal_body").html(data)
-                                $("#modalEdit").find("h5").text("Kreiranje")
+        $("#btnCreate").click(function () {
+                        $.get("/kupacs/Create", function (data) {
+            $("#modal-body").html(data)
+                $("#modal-title").text("Kreiranje")
+                            $("#modal-submit").html('<input type="submit" class="btn btn-primary" form="form" value="Potvrdi" />')
 
-                $('form').removeData('validator');
-                $('form').removeData('unobtrusiveValidation');
-                $.validator.unobtrusive.parse('form');
+                parseValidator()
 
             })
-        }
+        })
 
-    function prepareDelete(id, element) {
-        idDelete = id
-        elementDelete = element
-    }
 
-    function Submit() {
-            $.ajax({
-                url: '@Url.Action("Delete")',
+
+        $(".btnEdit").click(function () {
+            var id = $(this).attr("data-id")
+            console.log(id)
+            $.get("/kupacs/Edit/" + id, function (data) {
+                $("#modal-body").html(data)
+                $("#modal-title").text("Izmena")
+                $("#modal-submit").html('<input type="submit" class="btn btn-primary" form="form" value="Potvrdi" />')
+
+                parseValidator()
+            })
+        })
+
+
+    $(".btnDel").click(function() {
+            var id = $(this).attr("data-id")
+        var el = $(this).parents("tr")
+        $("#modal-body").html('Da li ste sigurni da želite da obrišete ovog kupca?')
+                        $("#modal-title").text("Potvrda")
+        $("#modal-submit").html('<button id="confirmDel" type="button" class="btn btn-primary" data-dismiss="modal">Potvrdi</button>')
+
+        $("#confirmDel").click(function () {
+                        $.ajax({
+                url: '/kupacs/Delete',
                 type: "POST",
-                data: { idKupac: idDelete },
+                data: { id: id },
                 complete: function () {
-                    $(elementDelete).parents("tr").hide(250);
-                                        $.bootstrapGrowl("Uspešno ste obrisali kupca.", { type: 'danger' })
+                    $(el).hide(250);
+                    $.bootstrapGrowl("Uspešno ste obrisali kupca.", { type: 'danger' })
                 }
             });
-    }
+        })
+    })
+
     </script>
-    }
+}

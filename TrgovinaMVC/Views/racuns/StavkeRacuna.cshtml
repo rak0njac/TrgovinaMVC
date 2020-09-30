@@ -1,20 +1,17 @@
-﻿@*@Html.EditorFor(model => model.stavkaracunas)*@
-@model TrgovinaMVC.Models.stavkaracuna
+﻿@model TrgovinaMVC.Models.stavkaracuna
 <tr>
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <td>
         <div>
             <div>
-                @*<input type="hidden" name="artikal.naziv.Index" value="" />*@
-                @Html.DropDownListFor(model => model.nazivartikla, ViewBag.artikli as SelectList, htmlAttributes: new { @class = "form-control", @data_orgname = "artikal.naziv", @onchange = "artikalChange(this)" })
-                @Html.ValidationMessageFor(model => model.nazivartikla, "", new { @class = "text-danger", @data_orgname = "artikal.naziv" })
+                @Html.DropDownListFor(m => m.idartikal, new SelectList((System.Collections.IEnumerable)ViewBag.artikli, "Value", "Text", "1"), htmlAttributes: new { @class = "form-control select-artikal" })
+                @Html.ValidationMessageFor(model => model.idartikal, "", new { @class = "text-danger", @data_orgname = "artikal.naziv" })
             </div>
         </div>
     </td>
     <td>
         <div>
             <div>
-                @*<input type="hidden" name="stavke.cenapojm.Index" />*@
                 @Html.EditorFor(model => model.cenapojm, new { htmlAttributes = new { @class = "form-control", @data_orgname = "cenapojm", @type = "number", @step = "0.01", @autocomplete = "off" } })
                 @Html.ValidationMessageFor(model => model.cenapojm, "", new { @class = "text-danger", @data_orgname = "cenapojm" })
             </div>
@@ -23,7 +20,6 @@
     <td>
         <div>
             <div>
-                @*<input type="hidden" name="kolicina.Index" />*@
                 @Html.EditorFor(model => model.kolicina, new { htmlAttributes = new { @class = "form-control", @data_orgname = "kolicina", @type = "number", @step = "0.01", @autocomplete = "off" } })
                 @Html.ValidationMessageFor(model => model.kolicina, "", new { @class = "text-danger", @data_orgname = "kolicina" })
             </div>
@@ -32,7 +28,7 @@
     <td>
         <div>
             <div>
-                <input type="button" value="Obriši" class="btn btn-primary" onclick="DeleteStavka(this)" style="display:none" />
+                <input type="button" value="Obriši" class="btn btn-primary btn-delStavka" style="display:none" />
             </div>
         </div>
     </td>

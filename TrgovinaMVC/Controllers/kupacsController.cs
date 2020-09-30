@@ -26,7 +26,7 @@ namespace TrgovinaMVC.Controllers
         // GET: kupacs/Create
         public ActionResult Create()
         {
-            return PartialView("Form");
+            return PartialView("FormCreate");
         }
 
         // POST: kupacs/Create
@@ -38,30 +38,24 @@ namespace TrgovinaMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                List<kupac> kupci = db.kupacs.Where(x => x.pib == kupac.naziv && x.aktivan == true).ToList();
+                if (kupci.Count > 0)
                 {
+                    TempData["status"] = "nameConflict";
+                }
+
+                else
+                {
+                    kupac.aktivan = true;
                     db.kupacs.Add(kupac);
-                    db.SaveChanges();
                     TempData["status"] = "added";
-
-                    return RedirectToAction("Index");
-
+                    db.SaveChanges();
                 }
-                catch (DbEntityValidationException ex)
-                {
-                    foreach (var errors in ex.EntityValidationErrors)
-                    {
-                        foreach (var validationError in errors.ValidationErrors)
-                        {
-                            string errorMessage = validationError.ErrorMessage;
-                            Debug.WriteLine(errorMessage);
-                        }
-                    }
-                }
+
+                return RedirectToAction("Index");
             }
 
-
-            return PartialView("Form", kupac);
+            return PartialView("FormCreate", kupac);
         }
 
         // GET: kupacs/Edit/5
@@ -76,7 +70,7 @@ namespace TrgovinaMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("Form", kupac);
+            return PartialView("FormEdit", kupac);
         }
 
         // POST: kupacs/Edit/5
@@ -88,19 +82,21 @@ namespace TrgovinaMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                kupac.aktivan = true;
                 db.Entry(kupac).State = EntityState.Modified;
                 db.SaveChanges();
                 TempData["status"] = "edited";
                 return RedirectToAction("Index");
             }
-            return PartialView("Form", kupac);
+            return PartialView("FormEdit", kupac);
         }
 
         [HttpPost]
         public ActionResult Delete(int idKupac)
         {
             kupac kupac = db.kupacs.Find(idKupac);
-            db.kupacs.Remove(kupac);
+            kupac.aktivan = false;
+            db.Entry(kupac).State = EntityState.Modified;
             db.SaveChanges();
             return new EmptyResult();
         }

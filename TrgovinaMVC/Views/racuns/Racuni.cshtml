@@ -12,7 +12,6 @@
             <th scope="col">Kupac</th>
             <th scope="col">Ukupna cena</th>
             <th scope="col" />
-            <th scope="col" />
         </tr>
     </thead>
     <tbody>
@@ -32,9 +31,9 @@
                         </td>
                     }
                 <td>
-                    @if (item.nazivkupca != null)
+                    @if (item.idkupac.HasValue)
                     {
-                        @Html.DisplayFor(modelItem => item.nazivkupca)
+                        @Html.DisplayFor(modelItem => item.kupac.naziv)
                     }
                     else
                     {
@@ -47,31 +46,7 @@
                     <td>
                         <input type="button" value="Prikaži" class="btn btn-primary btn-sm" onclick="window.open('@Url.Action("Show", new { id = item.idracun })', '_blank')">
                     </td>
-                    <td>
-                        <input type="button" value="Obriši" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalDel" onclick="prepareDelete(@item.idracun, this)">
-                    </td>
                 </tr>
         }
     </tbody>
 </table>
-
-<!-- Modal -->
-<div class="modal fade" id="modalDel" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="title">Potvrda</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Da li ste sigurni da želite da obrišete ovaj račun?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Poništi</button>
-                <button type="button" class="btn btn-primary" onclick="Submit()" data-dismiss="modal">Potvrdi</button>
-            </div>
-        </div>
-    </div>
-</div>

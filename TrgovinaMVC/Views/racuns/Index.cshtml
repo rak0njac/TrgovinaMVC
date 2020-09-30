@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<TrgovinaMVC.Models.racun>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Računi";
 }
 
 <div class="row justify-content-between mb-3">
     <input type="button" value="Kreiraj novi račun" class="btn btn-primary" onclick="location.href='@Url.Action("Create")'" />
-    <select class="selectpicker" id="selektor" data-style="btn-primary" onchange="TypeChange(this)">
+    <select class="selectpicker" id="selektorTipa" data-style="btn-primary">
         <option>Gotovinski</option>
         <option>Virman</option>
     </select>
@@ -17,12 +17,15 @@
     @Html.Partial("Racuni")
 </div>
 
+@section styles{
+    <link href="/Content/bootstrap-select.min.css" rel="stylesheet" />
+}
+
+
 @section scripts{
+    <script src="/Scripts/bootstrap-select.min.js"></script>
 
-
-<script type="text/javascript">
-    var idDelete;
-    var elementDelete;
+    <script>
 
     $("document").ready(function () {
                         var status = '@TempData["status"]'
@@ -32,31 +35,12 @@
 
     })
 
-    function prepareDelete(id, element) {
-        idDelete = id
-        elementDelete = element
-    }
-
-    function Submit() {
-            $.ajax({
-                url: '@Url.Action("Delete")',
-                type: "POST",
-                data: { idRacun: idDelete },
-                complete: function () {
-                    $(elementDelete).parents("tr").hide(250);
-                    $.bootstrapGrowl("Uspešno ste obrisali račun.", { type: 'danger' })
-
-                }
-            });
-    }
-    </script>
-    <script>
-        function TypeChange(element) {
-            var val = $(element).val();
+    $("#selektorTipa").change(function () {
+        var val = $(this).val()
             $("#tabela").fadeOut(250, function () {
                 $(this).load("/racuns/Reload/" + val);
                 $(this).fadeIn(250);
              })
-       }
+    })
     </script>
 }

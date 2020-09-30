@@ -25,14 +25,14 @@
                                  {
                                                     new SelectListItem { Value = "Gotovinski", Text = "Gotovinski"},
                                                     new SelectListItem { Value = "Virman", Text = "Virman"},
-                                 }, "Value", "Text"), null, new { @class = "form-control mr-3", @onchange = "Visible(this.value)" })
+                                 }, "Value", "Text"), null, new { @class = "form-control mr-3", @id = "tip" })
                         @Html.ValidationMessageFor(model => model.tipracuna, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.nazivkupca, "Kupac:", htmlAttributes: new { @class = "control-label mr-3" })
+                    @Html.LabelFor(model => model.idkupac, "Kupac:", htmlAttributes: new { @class = "control-label mr-3" })
                     <div id="dropdown_kupci">
-                        @Html.DropDownListFor(model => model.nazivkupca, ViewBag.kupci as SelectList, "Fizičko lice", htmlAttributes: new { @class = "form-control mr-3" })
+                        @Html.DropDownListFor(m => m.idkupac, new SelectList((System.Collections.IEnumerable)ViewBag.kupci, "Value", "Text", "1"), htmlAttributes: new { @class = "form-control mr-3" })
                     </div>
                 </div>
                 <div class="form-group" id="id-date" style="display:none">
@@ -47,8 +47,7 @@
     </div>
     <div class="row mb-1" id="tabela">
 
-        @*@Html.Action("Create","stavkaracunas")*@
-        <table class="table table-hover" @*style="width: 1000px"*@>
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th scope="col">Artikal</th>
@@ -58,19 +57,16 @@
                 </tr>
             </thead>
             <tbody id="stavke">
-                @*@Html.EditorFor(model => model.stavkaracunas)*@
                 @Html.Partial("StavkeRacuna")
             </tbody>
         </table>
-        
+
     </div>
 
-    @*<div class="row mb-1" id="tabela">
-            @Html.Action("Index", "stavkaracunas")
-        </div>*@
+
 
     <div class="row">
-        <input type="button" id="btnStart" value="Dodaj stavku" class="btn btn-primary btn-sm mb-3" onclick="AddStavka()" />
+        <input type="button" id="btn-addStavka" value="Dodaj stavku" class="btn btn-primary btn-sm mb-3" />
     </div>
 
     <div class="row">
@@ -78,70 +74,42 @@
     </div>
 }
 
-@Html.ActionLink("Nazad", "Index")
+@section styles {
+    <link href="/Content/bootstrap-datepicker.min.css" rel="stylesheet" />
+}
 
 @section scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="/Scripts/bootstrap-datepicker.min.js"></script>
 
     <script>
 
-        var naziviArtikla
         var brojStavki = 1
 
         $("document").ready(function () {
-            $("#stavke").find("input[type='number'], select").each(function () {
-                var name = $(this).attr("name")
-                name = "stavkaracunas[0]." + name
-                $(this).attr("name", name)
-            })
+            prepareIndex()
+            parseValidator()
 
-            $("#stavke").find("span").each(function () {
-                var name = $(this).attr("data-valmsg-for")
-                name = "stavkaracunas[0]." + name
-                $(this).attr("data-valmsg-for", name)
-            })
-            ResetValidator()
-            $.get("/racuns/getNaziviKupaca", function (data) {
-                $('#nazivkupca').autocomplete({
-                    source: data,
-                    delay: 0,
-                    classes:
-                    {
-                        "ui-autocomplete": "btn-light"
-                    }
-                })
-
-
-            })
-            $.get("/racuns/getNaziviArtikla", function (data) {
-                console.log(data)
-                naziviArtikla = data
-                            $('#nazivartikla').autocomplete({
-                source: naziviArtikla,
-                    delay: 0,
-                classes:
-                {
-                    "ui-autocomplete": "btn-light"
-                                }
-                
-                })
-            })
-
-            artikalChange($("#nazivartikla"))
-
+            artikalChange($("#idartikal"))
+            var opt = new Option("Fizičko lice", "")
+            $("#dropdown_kupci").find("select").prepend(opt)
+            opt.selected = true;
         })
 
-        function ResetValidator() {
-                        $('form').removeData('validator');
+        function parseValidator() {
+            $('form').removeData('validator');
             $('form').removeData('unobtrusiveValidation');
             $.validator.unobtrusive.parse('form');
         }
+
+
+
 
         function artikalChange(param) {
             var artikal = $(param).val()
             console.log(artikal)
             var cenaField = $(param).parents("tr").find("input[name*='cenapojm']")
-                        var kolicinaField = $(param).parents("tr").find("input[name*='kolicina']")
+            var kolicinaField = $(param).parents("tr").find("input[name*='kolicina']")
             console.log(cenaField)
             var cenaPoJm = $.get("/racuns/getCenaPoJm/" + artikal, function (data) {
                 $(cenaField).val(data)
@@ -149,20 +117,20 @@
             })
         }
 
-    function Visible(val) {
-        if (val == "Virman") {
-            $("#id-date").fadeIn(250);
-            $("#dropdown_kupci").find("option:contains(Fizičko lice)").remove()
-        }
-        else {
-            $("#id-date").fadeOut(250);
-            $("#id-date").find("input").val("")
-            var opt = new Option("Fizičko lice", "")
-            $("#dropdown_kupci").find("select").prepend(opt)
-            opt.selected = true;
-
-        } 
-        }
+        $("#tip").change(function () {
+            var val = $(this).val()
+            if (val == "Virman") {
+                $("#id-date").fadeIn(250);
+                $("#dropdown_kupci").find("option:contains(Fizičko lice)").remove()
+            }
+            else {
+                $("#id-date").fadeOut(250);
+                $("#id-date").find("input").val("")
+                var opt = new Option("Fizičko lice", "")
+                $("#dropdown_kupci").find("select").prepend(opt)
+                opt.selected = true;
+            }
+        })
 
         function checkStavke() {
             var buttons = $("input[value='Obriši']")
@@ -173,10 +141,9 @@
                 buttons.each(function () { $(this).attr('style', 'display:none') })
         }
 
-        function AddStavka()
-        {
-                        brojStavki++
-                            checkStavke()
+        $("#btn-addStavka").click(function() {
+            brojStavki++
+            checkStavke()
 
             var newrow = $("tr").last().clone()
             newrow.hide()
@@ -186,18 +153,36 @@
             newrow.find("span[id*='error']").text("")
             artikalChange(newrow.find("select"))
             resetIndex()
-            ResetValidator()
+            parseValidator()
+        })
 
-        }
+                $("#tabela").on("change", ".select-artikal", function () {
+            artikalChange(this)
+        })
 
-        function DeleteStavka(element) {
-                            brojStavki--
-                            checkStavke()
+        $("#tabela").on("click", ".btn-delStavka", function() {
+            brojStavki--
+            checkStavke()
+            console.log(this)
 
-            $(element).closest("tr").fadeOut(250, function () {
+            $(this).closest("tr").fadeOut(250, function () {
                 $(this).remove()
 
-                                resetIndex()
+                resetIndex()
+            })
+        })
+
+        function prepareIndex() {
+                        $("#stavke").find("input[type='number'], select").each(function () {
+                var name = $(this).attr("name")
+                name = "stavkaracunas[0]." + name
+                $(this).attr("name", name)
+            })
+
+            $("#stavke").find("span").each(function () {
+                var name = $(this).attr("data-valmsg-for")
+                name = "stavkaracunas[0]." + name
+                $(this).attr("data-valmsg-for", name)
             })
         }
 
@@ -208,7 +193,7 @@
                 var inputs = $(this).find("input[type='number'], select")
                 console.log(inputs)
                 $.each(inputs, function () {
-                    
+
                     var name = $(this).attr("name")
                     console.log(name)
                     var leftIndex = name.indexOf('[') + 1
@@ -228,7 +213,7 @@
                     name = name.replace(number, index)
                     $(this).attr("data-valmsg-for", name)
                 })
-        })
+            })
         }
     </script>
 }

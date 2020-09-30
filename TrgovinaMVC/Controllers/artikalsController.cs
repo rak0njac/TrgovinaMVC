@@ -14,22 +14,16 @@ namespace TrgovinaMVC.Controllers
     {
         private dbSTREntities db = new dbSTREntities();
 
-        // GET: artikals
         public ActionResult Index()
         {
-            //TempData["status"] = "none";
             return View(db.artikals.ToList());
         }
 
-        // GET: artikals/Create
         public ActionResult Create()
         {
-            return PartialView("Form");
+            return PartialView("FormCreate");
         }
 
-        // POST: artikals/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "naziv,cena,jm,kolnastanju")] artikal artikal)
@@ -37,17 +31,26 @@ namespace TrgovinaMVC.Controllers
 
             if (ModelState.IsValid)
             {
-                db.artikals.Add(artikal);
-                db.SaveChanges();
-                TempData["status"] = "added";
+                List<artikal> artikli = db.artikals.Where(x => x.naziv == artikal.naziv && x.aktivan == true).ToList();
+                if (artikli.Count > 0)
+                {
+                    TempData["status"] = "nameConflict";
+                }
+
+                else
+                {
+                    artikal.aktivan = true;
+                    db.artikals.Add(artikal);
+                    TempData["status"] = "added";
+                    db.SaveChanges();
+                }
 
                 return RedirectToAction("Index");
             }
 
-            return PartialView("Form", artikal);
+            return PartialView("FormCreate", artikal);
         }
 
-        // GET: artikals/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -59,34 +62,32 @@ namespace TrgovinaMVC.Controllers
             {
                 return HttpNotFound();
             }
-            return PartialView("Form", artikal);
+            return PartialView("FormEdit", artikal);
         }
 
-        // POST: artikals/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idartikal,naziv,cena,jm,kolnastanju")] artikal artikal)
         {
             if (ModelState.IsValid)
             {
+                artikal.aktivan = true;
                 db.Entry(artikal).State = EntityState.Modified;
                 db.SaveChanges();
                 TempData["status"] = "edited";
                 return RedirectToAction("Index");
             }
-            return PartialView("Form", artikal);
+            return PartialView("FormEdit", artikal);
         }
 
-        // GET: artikals/Delete/5
         [HttpPost]
-        public ActionResult Delete(int? idArt)
+        public ActionResult Delete(int? id)
         {
-            artikal artikal = db.artikals.Find(idArt);
-            db.artikals.Remove(artikal);
+            artikal artikal = db.artikals.Find(id);
+            artikal.aktivan = false;
+            db.Entry(artikal).State = EntityState.Modified;
             db.SaveChanges();
-            return View(artikal);
+            return new EmptyResult();
         }
 
         protected override void Dispose(bool disposing)

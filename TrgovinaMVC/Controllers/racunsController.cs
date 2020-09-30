@@ -16,7 +16,6 @@ namespace TrgovinaMVC.Controllers
     {
         private dbSTREntities db = new dbSTREntities();
 
-        // GET: racuns
         public ActionResult Index()
         {
             return View(db.racuns.ToList().Where(x => x.tipracuna == "Gotovinski"));
@@ -33,7 +32,6 @@ namespace TrgovinaMVC.Controllers
             return PartialView("Racuni", list);
         }
 
-        // GET: racuns/Details/5
         public ActionResult Show(int? id)
         {
             if (id == null)
@@ -48,109 +46,62 @@ namespace TrgovinaMVC.Controllers
             return View("Racun", racun);
         }
 
-        // GET: racuns/Create
         public ActionResult Create()
         {
-            ViewBag.pib = new SelectList(db.kupacs, "pib", "naziv");
-
-            SelectList kupci = new SelectList(db.kupacs.Select(o => o.naziv));
-            ViewBag.kupci = kupci;
-            ViewBag.artikli = new SelectList(db.artikals.Select(o => o.naziv));
+            ViewBag.kupci = db.kupacs.Where(x => x.aktivan).Select(x => new SelectListItem { Text = x.naziv, Value = x.idkupac.ToString() }).ToList();
+            ViewBag.artikli = db.artikals.Where(x=>x.aktivan).Select(x => new SelectListItem { Text = x.naziv, Value = x.idartikal.ToString() }).ToList();
             return View();
         }
 
-        public ActionResult getNaziviKupaca()
+        public ActionResult getCenaPoJm(int? id)
         {
-            List<string> nazivi = db.kupacs.Select(x => x.naziv).ToList();
-            return Json(nazivi, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult getNaziviArtikla()
-        {
-            List<string> nazivi = db.artikals.Select(x => x.naziv).ToList();
-            return Json(nazivi, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult getCenaPoJm(string id)
-        {
-            artikal artikal = db.artikals.Where(x => x.naziv == id).FirstOrDefault();
+            artikal artikal = db.artikals.Where(x => x.idartikal == id && x.aktivan).FirstOrDefault();
             return Content(artikal.cena.ToString());
         }
 
-        [HttpPost]
-        public ActionResult addStavka([Bind] racun racun)
-        {
-            racun.stavkaracunas.Add(new stavkaracuna());
-            return new EmptyResult();
-            //return PartialView("StavkeRacuna", racun);
-        }
+        //[HttpPost]
+        //public ActionResult addStavka([Bind] racun racun)
+        //{
+        //    racun.stavkaracunas.Add(new stavkaracuna());
+        //    return new EmptyResult();
+        //    //return PartialView("StavkeRacuna", racun);
+        //}
 
-        // POST: racuns/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "tipracuna, nazivkupca, datvalute, stavkaracunas")] racun racun)
+        public ActionResult Create([Bind(Include = "tipracuna, idkupac, datvalute, stavkaracunas")] racun racun)
         {
             racun.datizdavanja = DateTime.Now;
-            racun.brracuna = db.racuns.Where(o => o.tipracuna == racun.tipracuna).OrderBy(o => o.brracuna).Select(o => o.brracuna).FirstOrDefault() + 1;
-            kupac kupac = db.kupacs.Where(o => o.naziv == racun.nazivkupca).FirstOrDefault();
-            artikal artikal;
-            if(racun.tipracuna == "Virman")
-            {
-                                racun.nazivkupca = kupac.naziv;
-            racun.pibkupca = kupac.pib;
-            racun.adresakupca = kupac.adresa;
-            racun.brtelkupca = kupac.brtel;
-            }
+            racun.brracuna = db.racuns.Where(o => o.tipracuna == racun.tipracuna).OrderByDescending(o => o.brracuna).Select(o => o.brracuna).FirstOrDefault() + 1;
 
             racun.ukupnacena = 0;
 
             foreach (stavkaracuna sr in racun.stavkaracunas)
             {
-                artikal = db.artikals.Where(o => o.naziv == sr.nazivartikla).FirstOrDefault();
-                sr.nazivartikla = artikal.naziv;
-                sr.jmartikla = artikal.jm;
                 sr.ukupnacena = sr.kolicina * sr.cenapojm;
                 racun.ukupnacena += sr.ukupnacena;
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    db.racuns.Add(racun);
-                    db.SaveChanges();
-                    TempData["status"] = "added";
-                    return RedirectToAction("Index");
-
-                }
-                catch (DbEntityValidationException ex)
-                {
-                    foreach (var errors in ex.EntityValidationErrors)
-                    {
-                        foreach (var validationError in errors.ValidationErrors)
-                        {
-                            string errorMessage = validationError.ErrorMessage;
-                            Debug.WriteLine(errorMessage);
-                        }
-                    }
-                }
+                db.racuns.Add(racun);
+                db.SaveChanges();
+                TempData["status"] = "added";
+                return RedirectToAction("Index");
             }
 
-            //TODO ViewBag.pib = new SelectList(db.kupacs, "pib", "naziv", racun.pib);
             return View(racun);
         }
 
 
-        public ActionResult Delete(int? idRacun)
-        {
-            racun racun = db.racuns.Find(idRacun);
-            db.stavkaracunas.RemoveRange(racun.stavkaracunas);
-            db.racuns.Remove(racun);
-            db.SaveChanges();
-            return View(racun);
-        }
+        //public ActionResult Delete(int? id)
+        //{
+        //    racun racun = db.racuns.Find(id);
+        //    db.stavkaracunas.RemoveRange(racun.stavkaracunas);
+        //    db.racuns.Remove(racun);
+        //    db.SaveChanges();
+        //    return View(racun);
+        //}
 
         protected override void Dispose(bool disposing)
         {
